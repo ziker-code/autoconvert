@@ -367,16 +367,24 @@
 
       // ukuran file & versi diambil dari file sebenarnya (tidak perlu diubah manual)
       function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.round(n / 1024) + " KB"; }
+      // ukuran dibaca dari Content-Range permintaan 1 byte (tetap ada walau file teks dikompres)
+      function ukuran(r) {
+        var cr = r.headers.get("content-range") || "";
+        var m = cr.match(/\/(\d+)$/);
+        return m ? +m[1] : +r.headers.get("content-length");
+      }
       document.querySelectorAll("[data-size]").forEach(function (el) {
-        fetch(el.getAttribute("data-size"), { method: "HEAD" }).then(function (r) {
-          var n = +r.headers.get("content-length");
-          if (n) el.textContent += " · " + kb(n);
+        var url = el.getAttribute("data-size");
+        var js = /\.user\.js$/.test(url);
+        fetch(url, { headers: { Range: js ? "bytes=0-400" : "bytes=0-0" } }).then(function (r) {
+          var n = ukuran(r);
+          if (n > 1) el.textContent += " · " + kb(n);
+          return js ? r.text() : "";
+        }).then(function (t) {
+          var m = t && t.match(/@version\s+([\d.]+)/);
+          if (m) document.getElementById("versi").textContent = "v" + m[1];
         }).catch(function () {});
       });
-      fetch("assets/autokonvert.user.js", { headers: { Range: "bytes=0-400" } }).then(function (r) { return r.text(); }).then(function (t) {
-        var m = t.match(/@version\s+([\d.]+)/);
-        if (m) document.getElementById("versi").textContent = "v" + m[1];
-      }).catch(function () {});
     })();
   </script>
 </body>
