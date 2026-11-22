@@ -1,6 +1,6 @@
 # AutoKonvert Logbook IPB
 
-🌐 **Website:** https://ziker-code.github.io/autokonvert/ (template Excel, ekstensi Chrome, dan versi iPhone)
+🌐 **Website:** https://autokonvert.vercel.app/ (template Excel, ekstensi Chrome, dan versi iPhone)
 
 Ekstensi Chrome dan website panduan untuk mengisi **Log Aktivitas** Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti.
 
@@ -34,7 +34,7 @@ npm run build   # perbarui vendor, ikon, template, dan zip
 npm test        # tes parser
 ```
 
-Website cukup di-hosting sebagai file statis (GitHub Pages, Netlify, Vercel) dari folder `website/`.
+Website di-hosting di **Vercel** (lihat `vercel.json`): setiap push ke `main` otomatis menjalankan `npm run build && npm test` lalu menerbitkan folder `website/`.
 Jalankan `npm run build` setiap kali isi `extension/` berubah supaya zip di website ikut diperbarui.
 
 ## Cara kerja teknis
@@ -72,4 +72,4 @@ Jika sel kolom bukti berisi link Drive (hyperlink sel, rumus HYPERLINK, atau tek
 ## Versi iPhone (userscript)
 
 `npm run build` juga menghasilkan `website/assets/autokonvert.user.js` (SheetJS mini + parser.js + drive.js + userscript/host.js + content.js).
-Di iPhone dipasang lewat Safari + aplikasi **Userscripts**. Atur `SITE_URL` saat build (mis. `SITE_URL=https://namamu.github.io/autokonvert npm run build`) agar `@updateURL` terisi dan script bisa diperbarui otomatis.
+Di iPhone dipasang lewat Safari + aplikasi **Userscripts**. Saat di-build di Vercel, `@updateURL` otomatis memakai domain produksi Vercel (atau atur `SITE_URL` sendiri).
