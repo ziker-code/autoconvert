@@ -37,8 +37,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # dipakai untuk @updateURL userscript, supaya iPhone bisa mengecek pembaruan
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
+          # rilis terakhir di GitHub Pages: arahkan pembaruan userscript ke Vercel
+          SITE_URL: https://autokonvert.vercel.app
 
       - run: npm test
 

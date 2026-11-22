@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoKonvert Logbook IPB
 // @namespace    autokonvert-logbook-ipb
-// @version      1.4.0
+// @version      1.4.1
 // @description  Isi Log Aktivitas Student Portal IPB otomatis dari Excel + foto (lokal / Google Drive).
 // @match        https://studentportal.ipb.ac.id/*
 // @exclude      https://studentportal.ipb.ac.id/Account/*
@@ -521,7 +521,7 @@ parse_Primary(n.content)}catch(l){}a="/EncryptionInfo";n=Qe.find(e,a);if(!n||!n.
 
   globalThis.AutoKonvertHost = {
     jenis: "userscript",
-    versi: "1.4.0",
+    versi: "1.4.1",
     minta: (pesan) => globalThis.AutoKonvertDrive.proses(ambil, pesan),
   };
 })();
