@@ -1,0 +1,16 @@
+{
+  "name": "autokonvert",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ekstensi Chrome + website untuk mengisi Log Aktivitas Student Portal IPB secara otomatis dari file Excel.",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node tools/test-parser.mjs"
+  },
+  "devDependencies": {
+    "archiver": "^8.0.0",
+    "exceljs": "^4.4.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  }
+}

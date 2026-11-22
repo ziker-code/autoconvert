@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "AutoKonvert Logbook IPB",
+  "version": "1.2.0",
+  "description": "Isi Log Aktivitas Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti (file lokal atau Google Drive).",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "AutoKonvert Logbook IPB",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://drive.google.com/*",
+    "https://drive.usercontent.google.com/*",
+    "https://*.googleusercontent.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://studentportal.ipb.ac.id/Kegiatan/LogAktivitasKampusMerdeka/Index/*"],
+      "js": ["vendor/xlsx.full.min.js", "parser.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
