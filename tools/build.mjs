@@ -21,6 +21,11 @@ fs.copyFileSync(
 );
 console.log("✓ vendor/xlsx.full.min.js");
 
+// Lisensi ikut didistribusikan bersama ekstensi: MIT untuk proyek ini, Apache-2.0 untuk SheetJS
+fs.copyFileSync(path.join(ROOT, "LICENSE"), path.join(EXT, "LICENSE"));
+fs.copyFileSync(path.join(ROOT, "node_modules", "xlsx", "LICENSE"), path.join(EXT, "vendor", "LICENSE-sheetjs.txt"));
+console.log("✓ lisensi");
+
 // 2. Ikon (kotak biru membulat + petir putih) ---------------------------
 function crc32(buf) {
   let c, crc = 0xffffffff;
@@ -210,6 +215,8 @@ const meta = [
   "// @connect      drive.usercontent.google.com",
   "// @connect      googleusercontent.com",
   "// @noframes",
+  "// @license      MIT (AutoKonvert); berisi SheetJS CE, Apache-2.0 - https://sheetjs.com",
+  "// @homepageURL  https://github.com/ziker-code/autokonvert",
   ...(siteUrl
     ? [`// @downloadURL  ${siteUrl}/assets/autokonvert.user.js`, `// @updateURL    ${siteUrl}/assets/autokonvert.user.js`]
     : []),

@@ -12,6 +12,8 @@
 // @connect      drive.usercontent.google.com
 // @connect      googleusercontent.com
 // @noframes
+// @license      MIT (AutoKonvert); berisi SheetJS CE, Apache-2.0 - https://sheetjs.com
+// @homepageURL  https://github.com/ziker-code/autokonvert
 // ==/UserScript==
 
 /* ===== SheetJS (xlsx.mini) ===== */
