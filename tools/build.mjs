@@ -188,9 +188,13 @@ console.log("✓ zip:", path.relative(ROOT, zipPath), `(${(fs.statSync(zipPath).
 
 // 5. Userscript untuk iPhone (Safari + aplikasi Userscripts / Tampermonkey) ----------
 // Isinya kode yang sama dengan ekstensi; hanya akses Google Drive yang lewat GM.xmlHttpRequest.
-// Set SITE_URL (mis. https://namamu.github.io/autokonvert) agar pembaruan otomatis aktif.
+// Alamat website untuk @updateURL (pembaruan otomatis di iPhone): SITE_URL, atau otomatis
+// dari domain produksi Vercel saat di-build di Vercel.
 const versi = JSON.parse(fs.readFileSync(path.join(EXT, "manifest.json"), "utf8")).version;
-const siteUrl = (process.env.SITE_URL || "").replace(/\/+$/, "");
+const siteUrl = (
+  process.env.SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "")
+).replace(/\/+$/, "");
 const meta = [
   "// ==UserScript==",
   "// @name         AutoKonvert Logbook IPB",
