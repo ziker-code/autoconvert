@@ -110,6 +110,19 @@
     .fine { font-size: 14px; color: var(--muted); margin: 14px 0 0; display: flex; gap: 8px; }
     .fine .ic { width: 16px; height: 16px; margin-top: 3px; }
 
+    /* video tutorial: sampul dulu, pemutar YouTube dimuat saat diklik */
+    .video { margin: 4px 0 28px; }
+    .yt { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; border: 1px solid var(--line); border-radius: var(--radius);
+      overflow: hidden; background: var(--ink); cursor: pointer; }
+    .yt img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .92; transition: opacity .2s; }
+    .yt:hover img { opacity: 1; }
+    .yt .play { position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; margin: -34px 0 0 -34px; border-radius: 50%;
+      background: var(--navy); display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: transform .15s; }
+    .yt:hover .play { transform: scale(1.06); }
+    .yt .play svg { width: 28px; height: 28px; fill: #fff; margin-left: 4px; }
+    .video iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius); display: block; background: var(--ink); }
+    .video figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+
     /* langkah */
     ol.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
     ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 44px minmax(0, 1fr); padding: 20px 0; border-top: 1px solid var(--line); }
@@ -208,7 +221,7 @@
       <section id="unduh">
         <h1>AutoConvert Logbook</h1>
         <p class="intro">Mengisi Log Aktivitas di Student Portal IPB dari satu file Excel. Setiap baris dikirim sebagai satu log, lengkap dengan foto bukti dari perangkat atau Google Drive.</p>
-        <p class="sub">Cocok untuk konversi MPKMB/ospek, kepanitiaan, pelatihan, dan lomba.</p>
+        <p class="sub">Cocok untuk konversi MPKMB/ospek, kepanitiaan, pelatihan, dan lomba. Baru pertama kali? <a href="#video">Tonton video tutorial</a>.</p>
 
         <div class="files">
           <div class="file">
@@ -236,6 +249,13 @@
       <section id="cara-pakai">
         <h2>Cara pakai</h2>
         <p class="sub">Pemasangan cukup sekali. Untuk logbook berikutnya, ulangi langkah 04.</p>
+        <figure class="video" id="video">
+          <button class="yt" type="button" data-id="0-s6GVai9xk" aria-label="Putar video tutorial AutoConvert">
+            <img src="https://i.ytimg.com/vi/0-s6GVai9xk/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          </button>
+          <figcaption>Video tutorial: memasang dan memakai AutoConvert, dari Excel sampai log terkirim. <a href="https://youtu.be/0-s6GVai9xk" target="_blank" rel="noopener">Buka di YouTube</a></figcaption>
+        </figure>
         <ol class="steps">
           <li><div class="step">
             <h3>Buat aktivitas berstatus Draft</h3>
@@ -357,6 +377,18 @@
 
   <script>
     (function () {
+      // video: ganti sampul dengan pemutar YouTube (mode tanpa cookie) hanya saat diklik
+      document.querySelectorAll(".yt").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var f = document.createElement("iframe");
+          f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(b.getAttribute("data-id")) + "?autoplay=1&rel=0&modestbranding=1";
+          f.title = "Video tutorial AutoConvert";
+          f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+          f.allowFullscreen = true;
+          b.replaceWith(f);
+        });
+      });
+
       // tab perangkat; iPhone/iPad atau #iphone langsung memilih tab iPhone
       var tabs = [].slice.call(document.querySelectorAll('[role="tab"]'));
       function pilih(tab) {
