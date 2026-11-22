@@ -36,6 +36,7 @@ const modal = `<form id="main_form" action="/Kegiatan/LogAktivitasKampusMerdeka/
 <input name="__RequestVerificationToken" type="hidden" value="tok"></form>`;
 
 const shim = `
+if (!location.hash.includes("bantuan")) { try { history.replaceState(null, "", "/Kegiatan/LogAktivitasKampusMerdeka/Index/abc"); } catch (e) { console.log("replaceState gagal", e.message); } }
 window.__modal = ${JSON.stringify(modal)};
 const _fetch = window.fetch;
 window.fetch = async (url, opt) => {

@@ -11,6 +11,12 @@
   if (window.__autokonvertLoaded) return;
   window.__autokonvertLoaded = true;
 
+  // Tombol ⚡ muncul di semua halaman Student Portal (kecuali login). Panel pengisian
+  // hanya di halaman Log; di halaman lain panel menunjukkan link ke Log aktivitas.
+  const PATH = location.pathname.toLowerCase();
+  if (PATH.startsWith("/account/")) return;
+  const HALAMAN_LOG = PATH.includes("/kegiatan/logaktivitaskampusmerdeka/index/");
+
   // ---------------------------------------------------------------- konstanta
   const JEDA_ANTAR_KIRIM_MS = 1500;
   const BATAS_KOMPRES_BYTES = 2 * 1024 * 1024; // foto > 2 MB dikompres
@@ -551,6 +557,9 @@
       .primary { background: #0b5394; color: #fff; } .primary:disabled { background: #9ca3af; cursor: not-allowed; }
       .secondary { background: #f3f4f6; color: #111827; } .danger { background: #dc2626; color: #fff; }
       a.mini { display: inline-block; text-decoration: none; }
+      a.logitem { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px;
+        border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 8px; color: #0b5394; text-decoration: none; }
+      a.logitem:hover { border-color: #0b5394; background: #eef4fb; }
       button.mini, a.mini { margin-top: 4px; border: 1px solid #0b5394; background: #fff; color: #0b5394; border-radius: 6px;
         padding: 2px 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
       select { padding: 5px 8px; border-radius: 6px; border: 1px solid #d1d5db; font-size: 13px; }
@@ -742,11 +751,52 @@
       </div>`;
   }
 
+  /** Panel di luar halaman Log: tunjukkan link Log aktivitas yang ada di halaman ini. */
+  function bantuanHtml() {
+    const links = [];
+    const sudah = new Set();
+    document.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href") || "";
+      if (!/\/Kegiatan\/LogAktivitasKampusMerdeka\/Index\//i.test(href)) return;
+      const url = new URL(href, PORTAL_ORIGIN);
+      if (url.origin !== PORTAL_ORIGIN || sudah.has(url.pathname)) return;
+      sudah.add(url.pathname);
+      const tr = a.closest("tr");
+      const sel = tr ? [...tr.cells].map((c) => c.innerText.trim()) : [];
+      // kolom tabel Aktivitas: No, Tahun Semester, Nama Kegiatan, Kelompok, Soft Skill, Waktu, Jam, Status, ...
+      const nama = sel[2] || a.innerText.trim() || "Log aktivitas";
+      const status = sel.find((t) => /draft|disetujui|ditolak|diverifikasi/i.test(t)) || "";
+      links.push({ url: url.href, nama, status, draft: /draft/i.test(status) });
+    });
+    links.sort((a, b) => b.draft - a.draft);
+    const daftar = links.length
+      ? `<div class="step"><h3>Pilih Log aktivitas</h3>${links
+          .map(
+            (l) => `<a class="logitem" href="${esc(l.url)}"><b>${esc(l.nama)}</b>
+              <span class="chip ${l.draft ? "c-siap" : "c-duplikat"}">${esc(l.status.replace(/\s+/g, " ") || "Log")}</span></a>`
+          )
+          .join("")}
+          <div class="muted" style="margin-top:6px">Log hanya bisa ditambah pada aktivitas berstatus <b>Draft</b>.</div></div>`
+      : `<div class="step"><h3>Cara mulai</h3><ol style="margin:0;padding-left:18px">
+           <li>Buka <b>Kemahasiswaan → Aktivitas</b>.</li>
+           <li>Ketuk tombol <b>Log</b> (ikon daftar) pada aktivitas berstatus <b>Draft</b>.</li>
+           <li>Ketuk lagi tombol <b>⚡ AutoKonvert</b> di halaman Log itu.</li></ol>
+           <a class="logitem" href="${PORTAL_ORIGIN}/Kegiatan/AktivitasKampusMerdeka" style="margin-top:10px"><b>Buka daftar Aktivitas →</b></a></div>`;
+    return `<div class="alert info">AutoKonvert aktif ✅ (v${esc(HOST.versi)}). Pengisian logbook dilakukan di halaman <b>Log</b> sebuah aktivitas.</div>${daftar}`;
+  }
+
   function render() {
     const info = getInfoAktivitas();
     $("aktivitas").textContent = info.nama ? `${info.nama} · ${info.waktu}` : "";
     const body = $("body");
     const foot = $("foot");
+
+    if (!HALAMAN_LOG) {
+      $("aktivitas").textContent = "Buka halaman Log aktivitas untuk mulai";
+      body.innerHTML = bantuanHtml();
+      foot.innerHTML = "";
+      return;
+    }
 
     if (fatalMsg) {
       body.innerHTML = `<div class="alert">${esc(fatalMsg)}</div>`;
@@ -945,6 +995,10 @@
 
   // ------------------------------------------------------------ init
   async function init() {
+    if (!HALAMAN_LOG) {
+      render();
+      return;
+    }
     if (!getTambahUrl()) {
       fatalMsg =
         "Log aktivitas ini tidak bisa ditambah (sudah difinalisasi atau sedang diverifikasi). " +
@@ -964,5 +1018,14 @@
     render();
   }
 
-  init();
+  init().catch((err) => {
+    // tampilkan error di panel supaya bisa dilaporkan, alih-alih diam saja
+    console.error("[AutoKonvert]", err);
+    fatalMsg = `Terjadi error (v${HOST.versi}): ${err && err.message ? err.message : err}`;
+    try {
+      render();
+    } catch {
+      /* abaikan */
+    }
+  });
 })();
