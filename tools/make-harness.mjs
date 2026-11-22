@@ -58,13 +58,13 @@ window.__posts = [];
 window.__ujiExcel = () => {
   const b = Uint8Array.from(atob(${JSON.stringify(xlsxB64)}), c => c.charCodeAt(0));
   const f = new File([b], "logbook-contoh.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-  const inp = document.getElementById("autokonvert-root").shadowRoot.getElementById("excel");
+  const inp = document.getElementById("autoconvert-root").shadowRoot.getElementById("excel");
   const dt = new DataTransfer(); dt.items.add(f); inp.files = dt.files; inp.dispatchEvent(new Event("change"));
 };`;
 
-const us = fs.readFileSync("website/assets/autokonvert.user.js", "utf8");
+const us = fs.readFileSync("website/assets/autoconvert.user.js", "utf8");
 const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Uji Panel AutoKonvert</title><style>body{font-family:sans-serif;margin:0;padding:16px;background:#f4f6f9}</style></head><body>
+<title>Uji Panel AutoConvert</title><style>body{font-family:sans-serif;margin:0;padding:16px;background:#f4f6f9}</style></head><body>
 <div class="content-wrapper"><h3>Log Aktivitas Kampus Merdeka (TIRUAN UJI)</h3>
 <div>Nama Kegiatan
 MPKMB IPB University 2025, Peserta</div><div>Waktu

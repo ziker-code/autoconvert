@@ -1,6 +1,6 @@
-# AutoKonvert Logbook IPB
+# AutoConvert Logbook IPB
 
-🌐 **Website:** https://autokonvert.vercel.app/ (template Excel, ekstensi Chrome, dan versi iPhone)
+🌐 **Website:** https://autoconvert.vercel.app/ (template Excel, ekstensi Chrome, dan versi iPhone)
 
 Ekstensi Chrome dan website panduan untuk mengisi **Log Aktivitas** Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti.
 
@@ -71,11 +71,11 @@ Jika sel kolom bukti berisi link Drive (hyperlink sel, rumus HYPERLINK, atau tek
 
 ## Versi iPhone (userscript)
 
-`npm run build` juga menghasilkan `website/assets/autokonvert.user.js` (SheetJS mini + parser.js + drive.js + userscript/host.js + content.js).
+`npm run build` juga menghasilkan `website/assets/autoconvert.user.js` (SheetJS mini + parser.js + drive.js + userscript/host.js + content.js).
 Di iPhone dipasang lewat Safari + aplikasi **Userscripts**. Saat di-build di Vercel, `@updateURL` otomatis memakai domain produksi Vercel (atau atur `SITE_URL` sendiri).
 
 ## Lisensi
 
 [MIT](LICENSE) © 2026 ziker-code. Ekstensi dan userscript juga berisi SheetJS Community Edition (Apache-2.0); lihat [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-AutoKonvert adalah alat bantu buatan mahasiswa, bukan aplikasi resmi IPB University.
+AutoConvert adalah alat bantu buatan mahasiswa, bukan aplikasi resmi IPB University.

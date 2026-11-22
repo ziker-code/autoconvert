@@ -35,12 +35,12 @@ for (const dukung of [["arraybuffer", "blob", "text"], ["blob", "text"]]) {
   const ctx = vm.createContext({ GM: buatGM(dukung), btoa, atob, TextDecoder, Blob, ArrayBuffer, Uint8Array, console });
   ctx.globalThis = ctx;
   for (const f of ["extension/parser.js", "extension/drive.js", "userscript/host.js"]) vm.runInContext(fs.readFileSync(f, "utf8"), ctx);
-  const H = ctx.AutoKonvertHost;
+  const H = ctx.AutoConvertHost;
   assert.equal(H.jenis, "userscript");
 
   const folder = await H.minta({ type: "drive-folder", id: FOLDER_PUBLIK });
   assert.ok(folder.ok, "folder publik harus bisa dibuka: " + folder.error);
-  const files = ctx.AutoKonvertParser.parseDriveFolder(folder.html);
+  const files = ctx.AutoConvertParser.parseDriveFolder(folder.html);
   const gambar = files.filter((f) => f.jenis === "gambar");
   assert.ok(gambar.length > 0);
 
@@ -58,9 +58,9 @@ for (const dukung of [["arraybuffer", "blob", "text"], ["blob", "text"]]) {
 // SheetJS versi mini (dipakai userscript) tetap bisa membaca template
 const mini = vm.createContext({ console });
 vm.runInContext(fs.readFileSync("node_modules/xlsx/dist/xlsx.mini.min.js", "utf8"), mini);
-vm.runInContext(fs.readFileSync("extension/parser.js", "utf8").replace("globalThis.AutoKonvertParser", "this.AutoKonvertParser"), mini);
-const buf = new Uint8Array(fs.readFileSync("website/assets/template-logbook-autokonvert.xlsx"));
-const res = mini.AutoKonvertParser.bacaExcel(mini.XLSX, buf);
+vm.runInContext(fs.readFileSync("extension/parser.js", "utf8").replace("globalThis.AutoConvertParser", "this.AutoConvertParser"), mini);
+const buf = new Uint8Array(fs.readFileSync("website/assets/template-logbook-autoconvert.xlsx"));
+const res = mini.AutoConvertParser.bacaExcel(mini.XLSX, buf);
 assert.equal(res.sheet, "Logbook");
 console.log("  ✓ xlsx.mini membaca template");
 console.log("\nTes userscript lulus");

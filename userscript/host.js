@@ -1,5 +1,5 @@
 /*
- * AutoKonvert Logbook IPB — lapisan host untuk userscript (iPhone/Safari: aplikasi
+ * AutoConvert Logbook IPB — lapisan host untuk userscript (iPhone/Safari: aplikasi
  * "Userscripts" atau Tampermonkey). Menggantikan peran background.js di ekstensi:
  * permintaan ke Google Drive dikirim lewat GM.xmlHttpRequest (tidak terkena CORS).
  */
@@ -54,7 +54,7 @@
     return null;
   }
 
-  /** Adapter untuk AutoKonvertDrive: sama bentuknya dengan versi fetch di background.js */
+  /** Adapter untuk AutoConvertDrive: sama bentuknya dengan versi fetch di background.js */
   async function ambil(url, { biner }) {
     if (!gmXhr) throw new Error("Pengelola userscript tidak mengizinkan akses Google Drive (GM.xmlHttpRequest).");
     let resp = await kirim(url, biner ? "arraybuffer" : "text");
@@ -78,9 +78,9 @@
     return hasil;
   }
 
-  globalThis.AutoKonvertHost = {
+  globalThis.AutoConvertHost = {
     jenis: "userscript",
     versi: "__VERSI__",
-    minta: (pesan) => globalThis.AutoKonvertDrive.proses(ambil, pesan),
+    minta: (pesan) => globalThis.AutoConvertDrive.proses(ambil, pesan),
   };
 })();

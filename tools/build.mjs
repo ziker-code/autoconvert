@@ -105,7 +105,7 @@ const CONTOH = [
 ];
 
 const wb = new ExcelJS.Workbook();
-wb.creator = "AutoKonvert Logbook IPB";
+wb.creator = "AutoConvert Logbook IPB";
 const BIRU = "FF0B2F5B";
 
 function styleHeader(ws) {
@@ -156,7 +156,7 @@ const wp = wb.addWorksheet("Petunjuk");
 wp.getColumn(1).width = 4;
 wp.getColumn(2).width = 100;
 const petunjuk = [
-  ["", "PETUNJUK PENGISIAN — AutoKonvert Logbook IPB"],
+  ["", "PETUNJUK PENGISIAN — AutoConvert Logbook IPB"],
   ["", ""],
   ["1", 'Isi data di sheet "Logbook" mulai baris ke-2. Satu baris = satu log aktivitas. Jangan ubah judul kolom.'],
   ["2", "Tanggal: format DD/MM/YYYY (contoh 07/07/2025). Harus berada di dalam periode aktivitas."],
@@ -168,25 +168,25 @@ const petunjuk = [
   ["8", "Format bukti yang diterima: JPG, JPEG, PNG, PDF. Foto besar akan dikompres otomatis; PDF maksimal 10 MB."],
   ["9", 'Lihat sheet "Contoh" untuk contoh pengisian. Sheet "Contoh" TIDAK ikut dikirim.'],
   ["", ""],
-  ["", "Setelah selesai: buka halaman Log Aktivitas di Student Portal → klik ⚡ AutoKonvert Logbook → pilih Excel & foto → cek → Kirim."],
+  ["", "Setelah selesai: buka halaman Log Aktivitas di Student Portal → klik ⚡ AutoConvert Logbook → pilih Excel & foto → cek → Kirim."],
 ];
 petunjuk.forEach((r) => wp.addRow(r));
 wp.getCell("B1").font = { bold: true, size: 14, color: { argb: BIRU } };
 wp.eachRow((row) => { row.getCell(2).alignment = { wrapText: true, vertical: "top" }; row.getCell(1).alignment = { vertical: "top" }; });
 
-const templatePath = path.join(ASSETS, "template-logbook-autokonvert.xlsx");
+const templatePath = path.join(ASSETS, "template-logbook-autoconvert.xlsx");
 await wb.xlsx.writeFile(templatePath);
 console.log("✓ template:", path.relative(ROOT, templatePath));
 
 // 4. Zip ekstensi --------------------------------------------------------
-const zipPath = path.join(ASSETS, "autokonvert-extension.zip");
+const zipPath = path.join(ASSETS, "autoconvert-extension.zip");
 await new Promise((resolve, reject) => {
   const out = fs.createWriteStream(zipPath);
   const zip = new ZipArchive({ zlib: { level: 9 } });
   out.on("close", resolve);
   zip.on("error", reject);
   zip.pipe(out);
-  zip.directory(EXT, "autokonvert-extension");
+  zip.directory(EXT, "autoconvert-extension");
   zip.finalize();
 });
 console.log("✓ zip:", path.relative(ROOT, zipPath), `(${(fs.statSync(zipPath).size / 1024).toFixed(0)} KB)`);
@@ -202,8 +202,8 @@ const siteUrl = (
 ).replace(/\/+$/, "");
 const meta = [
   "// ==UserScript==",
-  "// @name         AutoKonvert Logbook IPB",
-  "// @namespace    autokonvert-logbook-ipb",
+  "// @name         AutoConvert Logbook IPB",
+  "// @namespace    autoconvert-logbook-ipb",
   `// @version      ${versi}`,
   "// @description  Isi Log Aktivitas Student Portal IPB otomatis dari Excel + foto (lokal / Google Drive).",
   "// @match        https://studentportal.ipb.ac.id/*",
@@ -215,10 +215,10 @@ const meta = [
   "// @connect      drive.usercontent.google.com",
   "// @connect      googleusercontent.com",
   "// @noframes",
-  "// @license      MIT (AutoKonvert); berisi SheetJS CE, Apache-2.0 - https://sheetjs.com",
-  "// @homepageURL  https://github.com/ziker-code/autokonvert",
+  "// @license      MIT (AutoConvert); berisi SheetJS CE, Apache-2.0 - https://sheetjs.com",
+  "// @homepageURL  https://github.com/ziker-code/autoconvert",
   ...(siteUrl
-    ? [`// @downloadURL  ${siteUrl}/assets/autokonvert.user.js`, `// @updateURL    ${siteUrl}/assets/autokonvert.user.js`]
+    ? [`// @downloadURL  ${siteUrl}/assets/autoconvert.user.js`, `// @updateURL    ${siteUrl}/assets/autoconvert.user.js`]
     : []),
   "// ==/UserScript==",
   "",
@@ -233,6 +233,6 @@ const bagian = [
 const isi = bagian
   .map(([nama, p]) => `\n/* ===== ${nama} ===== */\n` + fs.readFileSync(p, "utf8").replace("__VERSI__", versi))
   .join("\n");
-const userscriptPath = path.join(ASSETS, "autokonvert.user.js");
+const userscriptPath = path.join(ASSETS, "autoconvert.user.js");
 fs.writeFileSync(userscriptPath, meta + isi);
 console.log("✓ userscript:", path.relative(ROOT, userscriptPath), `(${(fs.statSync(userscriptPath).size / 1024).toFixed(0)} KB)`);

@@ -1,5 +1,5 @@
 /*
- * AutoKonvert Logbook IPB — logika parsing murni (tanpa DOM).
+ * AutoConvert Logbook IPB — logika parsing murni (tanpa DOM).
  * Dipakai oleh content.js dan diuji oleh tools/test-parser.mjs.
  */
 (() => {
@@ -323,7 +323,7 @@
     return { rows, sheet: pilih, sheets: valid };
   }
 
-  globalThis.AutoKonvertParser = {
+  globalThis.AutoConvertParser = {
     JENIS_KEGIATAN, TIPE, BULAN, KOLOM,
     pad2, norm, isValidDate, parseTanggal, parseJam, fmtTanggal, fmtJam, keyLog,
     parseJenis, parseTipe, tipeLokasi, parsePeriode, cocokKolom, cariHeader, bacaExcel, parseDriveLink, parseDriveFolder,

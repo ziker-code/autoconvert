@@ -4,21 +4,54 @@
   "installCommand": "npm ci",
   "buildCommand": "npm run build && npm test",
   "outputDirectory": "website",
-  "headers": [
+  "redirects": [
     {
       "source": "/assets/autokonvert.user.js",
-      "headers": [
-        { "key": "Content-Type", "value": "text/javascript; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
-      ]
+      "destination": "/assets/autoconvert.user.js",
+      "permanent": true
     },
     {
       "source": "/assets/autokonvert-extension.zip",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "destination": "/assets/autoconvert-extension.zip",
+      "permanent": true
     },
     {
       "source": "/assets/template-logbook-autokonvert.xlsx",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "destination": "/assets/template-logbook-autoconvert.xlsx",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/autoconvert.user.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/autoconvert-extension.zip",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/template-logbook-autoconvert.xlsx",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }

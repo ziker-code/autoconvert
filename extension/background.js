@@ -1,5 +1,5 @@
 /*
- * AutoKonvert Logbook IPB — service worker (ekstensi Chrome).
+ * AutoConvert Logbook IPB — service worker (ekstensi Chrome).
  *
  * Mengambil isi folder / file Google Drive untuk content script, karena
  * halaman Student Portal tidak bisa melakukannya sendiri (dibatasi CORS).
@@ -35,6 +35,6 @@ async function ambil(url, { biner }) {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!bolehDariPengirim(sender)) return false;
   if (!msg || !["drive-folder", "drive-file"].includes(msg.type)) return false;
-  AutoKonvertDrive.proses(ambil, msg).then(sendResponse, (e) => sendResponse({ ok: false, error: e?.message || String(e) }));
+  AutoConvertDrive.proses(ambil, msg).then(sendResponse, (e) => sendResponse({ ok: false, error: e?.message || String(e) }));
   return true; // jawab async
 });

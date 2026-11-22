@@ -1,5 +1,5 @@
 /*
- * AutoKonvert Logbook IPB — content script.
+ * AutoConvert Logbook IPB — content script.
  *
  * Berjalan di halaman Log Aktivitas Student Portal
  * (/Kegiatan/LogAktivitasKampusMerdeka/Index/{id}) dan menambahkan panel
@@ -8,8 +8,8 @@
  */
 (() => {
   "use strict";
-  if (window.__autokonvertLoaded) return;
-  window.__autokonvertLoaded = true;
+  if (window.__autoconvertLoaded) return;
+  window.__autoconvertLoaded = true;
 
   // Tombol ⚡ muncul di semua halaman Student Portal (kecuali login). Panel pengisian
   // hanya di halaman Log; di halaman lain panel menunjukkan link ke Log aktivitas.
@@ -30,8 +30,8 @@
     ".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv";
 
   // Lingkungan tempat panel berjalan: ekstensi Chrome (default) atau userscript iPhone
-  // (userscript mendefinisikan globalThis.AutoKonvertHost sebelum file ini).
-  const HOST = globalThis.AutoKonvertHost || {
+  // (userscript mendefinisikan globalThis.AutoConvertHost sebelum file ini).
+  const HOST = globalThis.AutoConvertHost || {
     jenis: "ekstensi",
     versi: chrome.runtime.getManifest().version,
     minta: (pesan) => chrome.runtime.sendMessage(pesan),
@@ -41,7 +41,7 @@
   const LOKAL = DI_HP ? "Dari HP" : "Komputer"; // label tombol pilih file lokal
   const LOKAL_KECIL = DI_HP ? "HP" : "komputer";
 
-  const P = globalThis.AutoKonvertParser;
+  const P = globalThis.AutoConvertParser;
   const { BULAN, pad2, norm, parseTanggal, parseJam, fmtTanggal, fmtJam, parseJenis, tipeLokasi, parsePeriode } = P;
   const bacaExcel = (buf, sheet) => P.bacaExcel(XLSX, buf, sheet);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -291,7 +291,7 @@
       const nama = file.name.replace(/\.[^.]+$/, "") + ".jpg";
       return new File([blob], nama, { type: "image/jpeg" });
     } catch (e) {
-      console.warn("[AutoKonvert] gagal kompres, pakai file asli", e);
+      console.warn("[AutoConvert] gagal kompres, pakai file asli", e);
       return file;
     }
   }
@@ -511,12 +511,12 @@
     const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Laporan");
-    XLSX.writeFile(wb, "laporan-autokonvert.xlsx");
+    XLSX.writeFile(wb, "laporan-autoconvert.xlsx");
   }
 
   // ------------------------------------------------------------ UI
   const host = document.createElement("div");
-  host.id = "autokonvert-root";
+  host.id = "autoconvert-root";
   document.documentElement.appendChild(host);
   const root = host.attachShadow({ mode: "open" });
 
@@ -675,11 +675,11 @@
         .gthumb { height: 130px; }
       }
     </style>
-    <button class="fab" id="fab" aria-label="Buka AutoKonvert">${ic("zap")}AutoKonvert</button>
-    <div class="panel" id="panel" role="dialog" aria-label="AutoKonvert Logbook">
+    <button class="fab" id="fab" aria-label="Buka AutoConvert">${ic("zap")}AutoConvert</button>
+    <div class="panel" id="panel" role="dialog" aria-label="AutoConvert Logbook">
       <div class="head">
         <span class="mark">${ic("zap")}</span>
-        <div class="judul"><h2>AutoKonvert Logbook<small>v${esc(HOST.versi)}${HOST.jenis === "userscript" ? " · HP" : ""}</small></h2><span class="sub" id="aktivitas"></span></div>
+        <div class="judul"><h2>AutoConvert Logbook<small>v${esc(HOST.versi)}${HOST.jenis === "userscript" ? " · HP" : ""}</small></h2><span class="sub" id="aktivitas"></span></div>
         <button class="x" id="close" title="Tutup" aria-label="Tutup">${ic("x")}</button>
       </div>
       <div class="body" id="body"></div>
@@ -869,9 +869,9 @@
       : `<div class="step"><h3>Cara mulai</h3><ol class="mulai">
            <li>Buka <b>Kemahasiswaan → Aktivitas</b>.</li>
            <li>Ketuk tombol <b>Log</b> (ikon daftar) pada aktivitas berstatus <b>Draft</b>.</li>
-           <li>Tekan lagi tombol <b>AutoKonvert</b> di halaman Log itu.</li></ol>
+           <li>Tekan lagi tombol <b>AutoConvert</b> di halaman Log itu.</li></ol>
            <a class="logitem" href="${PORTAL_ORIGIN}/Kegiatan/AktivitasKampusMerdeka" style="margin-top:10px"><b>Buka daftar Aktivitas</b>${ic("arrow")}</a></div>`;
-    return `<div style="height:14px"></div><div class="alert ok">${ic("check")}<span>AutoKonvert aktif (v${esc(HOST.versi)}). Pengisian logbook dilakukan di halaman <b>Log</b> sebuah aktivitas.</span></div>${daftar}`;
+    return `<div style="height:14px"></div><div class="alert ok">${ic("check")}<span>AutoConvert aktif (v${esc(HOST.versi)}). Pengisian logbook dilakukan di halaman <b>Log</b> sebuah aktivitas.</span></div>${daftar}`;
   }
 
   function render() {
@@ -930,7 +930,7 @@
         <h3><span class="num">1</span> Pilih file Excel logbook</h3>
         <div class="row">
           <label class="file">${ic("sheet")}Pilih Excel<input type="file" id="excel" accept="${ACCEPT_EXCEL}" ${state.running ? "disabled" : ""}></label>
-          <span class="muted">${state.excelName ? esc(state.excelName) + ` · ${state.rows.length} baris` : "Gunakan template dari website AutoKonvert"}</span>
+          <span class="muted">${state.excelName ? esc(state.excelName) + ` · ${state.rows.length} baris` : "Gunakan template dari website AutoConvert"}</span>
         </div>
         ${
           state.sheets.length > 1
@@ -1107,7 +1107,7 @@
 
   init().catch((err) => {
     // tampilkan error di panel supaya bisa dilaporkan, alih-alih diam saja
-    console.error("[AutoKonvert]", err);
+    console.error("[AutoConvert]", err);
     fatalMsg = `Terjadi error (v${HOST.versi}): ${err && err.message ? err.message : err}`;
     try {
       render();

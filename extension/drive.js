@@ -1,5 +1,5 @@
 /*
- * AutoKonvert Logbook IPB — akses Google Drive (dipakai bersama).
+ * AutoConvert Logbook IPB — akses Google Drive (dipakai bersama).
  *
  * Dipakai oleh background.js (ekstensi Chrome, lewat fetch) dan oleh
  * userscript iPhone (lewat GM.xmlHttpRequest). Pemanggil menyediakan fungsi
@@ -70,5 +70,5 @@
     return Promise.resolve({ ok: false, error: "permintaan tidak dikenal" });
   }
 
-  globalThis.AutoKonvertDrive = { ID_RE, proses, ambilFolder, ambilFile, keBase64, namaDariDisposition };
+  globalThis.AutoConvertDrive = { ID_RE, proses, ambilFolder, ambilFile, keBase64, namaDariDisposition };
 })();

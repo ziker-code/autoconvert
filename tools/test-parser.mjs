@@ -8,7 +8,7 @@ import * as XLSX from "xlsx";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 new Function(fs.readFileSync(path.join(ROOT, "extension", "parser.js"), "utf8"))();
-const P = globalThis.AutoKonvertParser;
+const P = globalThis.AutoConvertParser;
 
 let lulus = 0;
 const t = (nama, fn) => { fn(); lulus++; console.log("  ✓", nama); };
@@ -51,7 +51,7 @@ t("parsePeriode lintas tahun", () => {
 });
 
 console.log("Template resmi");
-const template = path.join(ROOT, "website", "assets", "template-logbook-autokonvert.xlsx");
+const template = path.join(ROOT, "website", "assets", "template-logbook-autoconvert.xlsx");
 t("template kosong terbaca tanpa error dan 0 baris", () => {
   const { rows, sheet } = P.bacaExcel(XLSX, fs.readFileSync(template));
   assert.equal(sheet, "Logbook");
