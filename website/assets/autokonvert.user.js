@@ -1066,7 +1066,7 @@ parse_Primary(n.content)}catch(l){}a="/EncryptionInfo";n=Qe.find(e,a);if(!n||!n.
         height: 44px; padding: 0 16px; border: 0; border-radius: 8px; cursor: pointer; background: #0B2F5B; color: #fff;
         font-size: 14px; font-weight: 500; box-shadow: 0 4px 14px rgba(11,47,91,.28); }
       .fab:hover { background: #08254A; }
-      .fab .ic { width: 17px; height: 17px; stroke-width: 2; }
+      .fab .ic { width: 17px; height: 17px; fill: currentColor; stroke-width: 1.5; }
 
       /* panel */
       .panel { position: fixed; right: 20px; bottom: 20px; z-index: 2147483001; width: min(760px, calc(100vw - 40px));
@@ -1076,7 +1076,7 @@ parse_Primary(n.content)}catch(l){}a="/EncryptionInfo";n=Qe.find(e,a);if(!n||!n.
       .panel.open { display: flex; }
       .head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #E1E7EF; }
       .mark { width: 30px; height: 30px; border-radius: 6px; background: #0B2F5B; color: #fff; display: grid; place-items: center; flex: none; }
-      .mark .ic { stroke-width: 2; }
+      .mark .ic { fill: currentColor; stroke-width: 1.5; }
       .head h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
       .head h2 small { font-weight: 400; color: #55627A; font-size: 12px; margin-left: 4px; }
       .head .sub { display: block; font-size: 12px; color: #55627A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

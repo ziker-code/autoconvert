@@ -31,16 +31,15 @@
 
     /* bar atas: tipis, seperti aplikasi */
     header.top { position: sticky; top: 0; z-index: 10; height: 56px; background: var(--navy); color: #fff; }
-    header.top .in { max-width: 1160px; height: 100%; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
+    header.top .in { max-width: 1280px; height: 100%; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 600; }
-    .brand .ic { width: 18px; height: 18px; stroke-width: 2; }
-    .brand small { font: 400 12px var(--mono); color: #A9BBD3; }
+    .brand .ic { width: 18px; height: 18px; fill: currentColor; stroke-width: 1.5; }
     header.top nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
     header.top nav a { color: #D6E0EE; text-decoration: none; }
     header.top nav a:hover { color: #fff; }
 
     /* kerangka: daftar isi + isi */
-    .shell { max-width: 1160px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 56px;
+    .shell { max-width: 1280px; margin: 0 auto; padding: 0 28px; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 48px;
       transition: grid-template-columns .2s ease, gap .2s ease; }
     aside.toc { position: sticky; top: 56px; align-self: start; height: calc(100vh - 56px); padding: 34px 0 40px; overflow: auto; }
     .toc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
@@ -57,22 +56,25 @@
     .toc .meta a { color: var(--muted); }
 
     /* daftar isi ditutup: tinggal rel tipis dengan tombol buka */
-    .shell.tutup { grid-template-columns: 32px minmax(0, 1fr); gap: 40px; }
+    .shell.tutup { grid-template-columns: 32px minmax(0, 1fr); gap: 32px; }
     .shell.tutup .toc-head p, .shell.tutup .toc-body { display: none; }
     .shell.tutup .toc-head { justify-content: flex-start; }
-    .shell.tutup main { margin: 0 auto; }
     .shell.tutup .toc-btn { border-color: var(--line); }
     .ic-buka { display: none; }
     .shell.tutup .ic-buka { display: block; }
     .shell.tutup .ic-tutup { display: none; }
-    main { padding: 40px 0 80px; max-width: 760px; }
+    .shell > * { min-width: 0; } /* cegah tabel lebar mendorong kolom melebihi layar */
+    main { padding: 40px 0 80px; }
+    .intro, .sub { max-width: 860px; }
     @media (max-width: 900px) {
-      .shell { grid-template-columns: 1fr; gap: 0; }
+      .shell { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0 16px; }
+      header.top .in { padding: 0 16px; }
       aside.toc { position: static; height: auto; padding: 16px 0 0; border-bottom: 1px solid var(--line); }
       .toc-head, .toc .meta { display: none; }
-      .shell.tutup { grid-template-columns: 1fr; gap: 0; }
+      .shell.tutup { grid-template-columns: minmax(0, 1fr); gap: 0; }
       .shell.tutup .toc-body { display: block; }
-      .toc ol { display: flex; gap: 4px; overflow-x: auto; border: 0; padding-bottom: 12px; }
+      .toc ol { display: flex; gap: 4px; overflow-x: auto; border: 0; padding-bottom: 12px; scrollbar-width: none; }
+      .toc ol::-webkit-scrollbar { display: none; }
       .toc ol a { padding: 6px 12px; margin: 0; border: 1px solid var(--line); border-radius: 99px; }
       .toc ol a.on { border-color: var(--navy); }
       main { padding-top: 28px; }
@@ -171,7 +173,7 @@
 
   <header class="top">
     <div class="in">
-      <a class="brand" href="#"><svg class="ic"><use href="#i-zap"/></svg>AutoKonvert <small id="versi"></small></a>
+      <a class="brand" href="#"><svg class="ic"><use href="#i-zap"/></svg>AutoKonvert</a>
       <nav aria-label="Tautan">
         <a href="https://studentportal.ipb.ac.id" target="_blank" rel="noopener">Student Portal</a>
         <a href="https://github.com/ziker-code/autokonvert" target="_blank" rel="noopener">GitHub</a>
@@ -408,7 +410,7 @@
         document.querySelectorAll("main section").forEach(function (s) { io.observe(s); });
       }
 
-      // ukuran file & versi diambil dari file sebenarnya (tidak perlu diubah manual)
+      // ukuran file diambil dari file sebenarnya (tidak perlu diubah manual)
       function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.round(n / 1024) + " KB"; }
       // ukuran dibaca dari Content-Range permintaan 1 byte (tetap ada walau file teks dikompres)
       function ukuran(r) {
@@ -418,14 +420,9 @@
       }
       document.querySelectorAll("[data-size]").forEach(function (el) {
         var url = el.getAttribute("data-size");
-        var js = /\.user\.js$/.test(url);
-        fetch(url, { headers: { Range: js ? "bytes=0-400" : "bytes=0-0" } }).then(function (r) {
+        fetch(url, { headers: { Range: "bytes=0-0" } }).then(function (r) {
           var n = ukuran(r);
           if (n > 1) el.textContent += " · " + kb(n);
-          return js ? r.text() : "";
-        }).then(function (t) {
-          var m = t && t.match(/@version\s+([\d.]+)/);
-          if (m) document.getElementById("versi").textContent = "v" + m[1];
         }).catch(function () {});
       });
     })();
