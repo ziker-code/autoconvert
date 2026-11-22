@@ -1,6 +1,6 @@
 # AutoConvert Logbook IPB
 
-🌐 **Website:** https://autoconvert.vercel.app/ (template Excel, ekstensi Chrome, dan versi iPhone)
+🌐 **Website:** https://autoconvert-ipb.vercel.app/ (template Excel, ekstensi Chrome, dan versi iPhone)
 
 Ekstensi Chrome dan website panduan untuk mengisi **Log Aktivitas** Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti.
 
