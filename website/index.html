@@ -40,23 +40,41 @@
     header.top nav a:hover { color: #fff; }
 
     /* kerangka: daftar isi + isi */
-    .shell { max-width: 1160px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 56px; }
-    aside.toc { position: sticky; top: 56px; align-self: start; height: calc(100vh - 56px); padding: 40px 0; overflow: auto; }
-    .toc p { margin: 0 0 10px; font: 500 12px var(--mono); color: var(--muted); letter-spacing: .02em; }
+    .shell { max-width: 1160px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 56px;
+      transition: grid-template-columns .2s ease, gap .2s ease; }
+    aside.toc { position: sticky; top: 56px; align-self: start; height: calc(100vh - 56px); padding: 34px 0 40px; overflow: auto; }
+    .toc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .toc-head p { margin: 0; font: 500 12px var(--mono); color: var(--muted); letter-spacing: .02em; white-space: nowrap; }
+    .toc-btn { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border: 1px solid transparent; border-radius: var(--radius);
+      background: none; color: var(--muted); cursor: pointer; }
+    .toc-btn:hover { color: var(--navy); border-color: var(--line); background: var(--soft); }
+    .toc-btn .ic { width: 17px; height: 17px; }
     .toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
-    .toc a { display: block; padding: 6px 0 6px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 14px; }
-    .toc a:hover { color: var(--ink); }
-    .toc a.on { color: var(--navy); border-left-color: var(--navy); font-weight: 500; }
-    .toc .meta { margin-top: 28px; font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .toc ol a { display: block; padding: 6px 0 6px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
+    .toc ol a:hover { color: var(--ink); }
+    .toc ol a.on { color: var(--navy); border-left-color: var(--navy); font-weight: 500; }
+    .toc .meta { margin-top: 28px; font-size: 13px; color: var(--muted); line-height: 1.8; white-space: nowrap; }
     .toc .meta a { color: var(--muted); }
+
+    /* daftar isi ditutup: tinggal rel tipis dengan tombol buka */
+    .shell.tutup { grid-template-columns: 32px minmax(0, 1fr); gap: 40px; }
+    .shell.tutup .toc-head p, .shell.tutup .toc-body { display: none; }
+    .shell.tutup .toc-head { justify-content: flex-start; }
+    .shell.tutup main { margin: 0 auto; }
+    .shell.tutup .toc-btn { border-color: var(--line); }
+    .ic-buka { display: none; }
+    .shell.tutup .ic-buka { display: block; }
+    .shell.tutup .ic-tutup { display: none; }
     main { padding: 40px 0 80px; max-width: 760px; }
     @media (max-width: 900px) {
       .shell { grid-template-columns: 1fr; gap: 0; }
       aside.toc { position: static; height: auto; padding: 16px 0 0; border-bottom: 1px solid var(--line); }
-      .toc p, .toc .meta { display: none; }
+      .toc-head, .toc .meta { display: none; }
+      .shell.tutup { grid-template-columns: 1fr; gap: 0; }
+      .shell.tutup .toc-body { display: block; }
       .toc ol { display: flex; gap: 4px; overflow-x: auto; border: 0; padding-bottom: 12px; }
-      .toc a { padding: 6px 12px; margin: 0; border: 1px solid var(--line); border-radius: 99px; white-space: nowrap; }
-      .toc a.on { border-color: var(--navy); }
+      .toc ol a { padding: 6px 12px; margin: 0; border: 1px solid var(--line); border-radius: 99px; }
+      .toc ol a.on { border-color: var(--navy); }
       main { padding-top: 28px; }
       header.top nav { display: none; }
     }
@@ -161,9 +179,16 @@
     </div>
   </header>
 
-  <div class="shell">
+  <div class="shell" id="shell">
     <aside class="toc" aria-label="Daftar isi">
-      <p>Daftar isi</p>
+      <div class="toc-head">
+        <p>Daftar isi</p>
+        <button class="toc-btn" id="tocBtn" type="button" aria-controls="tocBody" aria-expanded="true" aria-label="Tutup daftar isi" title="Tutup daftar isi">
+          <svg class="ic ic-tutup" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m16 15-3-3 3-3"/></svg>
+          <svg class="ic ic-buka" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></svg>
+        </button>
+      </div>
+      <div class="toc-body" id="tocBody">
       <ol>
         <li><a href="#unduh">Unduhan</a></li>
         <li><a href="#cara-pakai">Cara pakai</a></li>
@@ -173,6 +198,7 @@
       <div class="meta">
         Bukan aplikasi resmi IPB.<br>
         <a href="https://github.com/ziker-code/autokonvert/blob/main/LICENSE">Lisensi MIT</a>
+      </div>
       </div>
     </aside>
 
@@ -354,7 +380,24 @@
       }
 
       // penanda bagian aktif di daftar isi
-      var links = [].slice.call(document.querySelectorAll(".toc a"));
+      // buka/tutup daftar isi; pilihan diingat di browser ini
+      var shell = document.getElementById("shell"), btn = document.getElementById("tocBtn");
+      function setToc(tutup) {
+        shell.classList.toggle("tutup", tutup);
+        btn.setAttribute("aria-expanded", String(!tutup));
+        var label = tutup ? "Buka daftar isi" : "Tutup daftar isi";
+        btn.setAttribute("aria-label", label);
+        btn.title = label;
+      }
+      try { setToc(localStorage.getItem("ak-toc") === "tutup"); } catch (e) {}
+      btn.addEventListener("click", function () {
+        var tutup = !shell.classList.contains("tutup");
+        setToc(tutup);
+        try { localStorage.setItem("ak-toc", tutup ? "tutup" : "buka"); } catch (e) {}
+      });
+
+      var links = [].slice.call(document.querySelectorAll(".toc ol a"));
+      if (links[0]) links[0].classList.add("on");
       if ("IntersectionObserver" in window) {
         var io = new IntersectionObserver(function (es) {
           es.forEach(function (e) {
