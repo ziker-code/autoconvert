@@ -60,9 +60,9 @@ function makeIcon(size) {
       }
       const n = SS * SS, a = bg / n, f = bg ? fg / bg : 0;
       const o = y * (size * 4 + 1) + 1 + x * 4;
-      raw[o] = Math.round(11 + (255 - 11) * f);
-      raw[o + 1] = Math.round(83 + (214 - 83) * f);
-      raw[o + 2] = Math.round(148 + (10 - 148) * f);
+      raw[o] = Math.round(11 + (255 - 11) * f); // biru tua #0B2F5B -> putih
+      raw[o + 1] = Math.round(47 + (255 - 47) * f);
+      raw[o + 2] = Math.round(91 + (255 - 91) * f);
       raw[o + 3] = Math.round(a * 255);
     }
   }
@@ -101,7 +101,7 @@ const CONTOH = [
 
 const wb = new ExcelJS.Workbook();
 wb.creator = "AutoKonvert Logbook IPB";
-const BIRU = "FF0B5394";
+const BIRU = "FF0B2F5B";
 
 function styleHeader(ws) {
   const row = ws.getRow(1);

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AutoKonvert Logbook IPB",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Isi Log Aktivitas Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti (file lokal atau Google Drive).",
   "icons": {
     "16": "icons/icon16.png",

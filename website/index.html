@@ -4,368 +4,360 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AutoKonvert Logbook IPB</title>
-  <meta name="description" content="Isi Log Aktivitas Student Portal IPB secara otomatis dari file Excel, lengkap dengan foto bukti. Cocok untuk konversi MPKMB/ospek dan aktivitas lain.">
+  <meta name="description" content="Isi Log Aktivitas Student Portal IPB dari satu file Excel, lengkap dengan foto bukti. Untuk laptop (Chrome/Edge) dan iPhone (Safari).">
+  <meta name="theme-color" content="#0B2F5B">
   <link rel="icon" href="assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f8fb; --surface: #ffffff; --text: #0f172a; --muted: #5b6577; --line: #e3e8ef;
-      --brand: #0b5394; --brand-2: #1c6fc0; --brand-soft: #e8f1fb; --accent: #ffd60a;
-      --ok: #15803d; --warn: #b45309; --radius: 16px;
-      --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #0b1220; --surface: #111a2b; --text: #e6ebf3; --muted: #9aa6b8; --line: #22304a;
-        --brand: #4e9ae6; --brand-2: #6fb0f0; --brand-soft: #14263f; --shadow: 0 8px 24px rgba(0,0,0,.35);
-      }
-    }
-    :root[data-theme="dark"] {
-      --bg: #0b1220; --surface: #111a2b; --text: #e6ebf3; --muted: #9aa6b8; --line: #22304a;
-      --brand: #4e9ae6; --brand-2: #6fb0f0; --brand-soft: #14263f; --shadow: 0 8px 24px rgba(0,0,0,.35);
+      --navy: #0B2F5B;
+      --navy-hover: #08254A;
+      --ink: #0F1B2D;
+      --muted: #55627A;
+      --line: #E1E7EF;
+      --soft: #F5F8FC;
+      --tint: #EAF0F8;
+      --warn-bg: #FFF8E6;
+      --warn-line: #F1DFA8;
+      --radius: 8px;
     }
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Plus Jakarta Sans", system-ui, sans-serif; }
-    a { color: var(--brand); }
-    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
-    code, kbd { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .88em; background: var(--brand-soft); padding: 2px 6px; border-radius: 6px; }
-    kbd { border: 1px solid var(--line); background: var(--surface); }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body { margin: 0; background: #fff; color: var(--ink); font: 16px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: var(--navy); text-underline-offset: 3px; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    code, kbd { font: 500 .86em "IBM Plex Mono", ui-monospace, monospace; background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+    .ic { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* nav */
-    nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-    nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; text-decoration: none; color: var(--text); }
-    .logo img { width: 30px; height: 30px; }
-    nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; font-size: 14px; font-weight: 600; }
-    nav ul a { color: var(--muted); text-decoration: none; }
-    nav ul a:hover { color: var(--brand); }
-    @media (max-width: 720px) { nav ul { display: none; } }
+    /* header */
+    header.top { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.94); backdrop-filter: saturate(180%) blur(8px); border-bottom: 1px solid var(--line); }
+    header.top .wrap { height: 60px; display: flex; align-items: center; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
+    .brand .mark { width: 28px; height: 28px; border-radius: 6px; background: var(--navy); color: #fff; display: grid; place-items: center; }
+    .brand .mark .ic { width: 16px; height: 16px; stroke-width: 2; }
+    nav.links { display: flex; gap: 22px; font-size: 14px; }
+    nav.links a { color: var(--muted); text-decoration: none; }
+    nav.links a:hover { color: var(--navy); }
+    header.top .btn { margin-left: auto; }
+    @media (max-width: 720px) { nav.links { display: none; } }
+
+    /* buttons */
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: var(--radius); font-family: inherit; font-weight: 500; font-size: 15px; line-height: 1; text-decoration: none; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+    .btn.primary { background: var(--navy); color: #fff; }
+    .btn.primary:hover { background: var(--navy-hover); }
+    .btn.outline { border-color: #C9D3E1; color: var(--navy); background: #fff; }
+    .btn.outline:hover { border-color: var(--navy); }
+    .btn.sm { height: 36px; padding: 0 12px; font-size: 14px; }
+    .btn:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
 
     /* hero */
-    .hero { padding: 72px 0 56px; }
-    .hero .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
-    @media (max-width: 860px) { .hero .grid { grid-template-columns: 1fr; } .hero { padding-top: 40px; } }
-    .pill { display: inline-block; background: var(--brand-soft); color: var(--brand); font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 999px; }
-    h1 { font-size: clamp(32px, 5vw, 50px); line-height: 1.1; margin: 16px 0; letter-spacing: -.02em; }
-    h1 span { color: var(--brand); }
-    .lead { font-size: 18px; color: var(--muted); max-width: 560px; }
-    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 15px; border: 1px solid transparent; transition: transform .15s, box-shadow .15s; }
-    .btn:hover { transform: translateY(-1px); }
-    .btn.primary { background: var(--brand); color: #fff; box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 35%, transparent); }
-    .btn.ghost { background: var(--surface); color: var(--text); border-color: var(--line); }
-    .btn svg { width: 18px; height: 18px; flex: none; }
-    .hero-note { margin-top: 16px; font-size: 13px; color: var(--muted); }
+    .hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
+    .hero .grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+    @media (max-width: 880px) { .hero .grid { grid-template-columns: 1fr; gap: 36px; } .hero { padding-top: 44px; } }
+    .eyebrow { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+    h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.15; letter-spacing: -.02em; font-weight: 600; margin: 0 0 18px; }
+    .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; max-width: 560px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .facts { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+    .facts li { display: flex; align-items: center; gap: 7px; }
+    .facts .ic { width: 16px; height: 16px; color: var(--navy); stroke-width: 2.2; }
 
-    /* mock panel */
-    .mock { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; font-size: 13px; }
-    .mock-head { background: #0b5394; color: #fff; padding: 12px 16px; font-weight: 700; }
-    .mock-head small { display: block; font-weight: 500; opacity: .85; }
-    .mock-body { padding: 14px 16px; display: grid; gap: 10px; }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
-    .c1 { background: #e0f2fe; color: #075985; } .c2 { background: #dcfce7; color: #166534; } .c3 { background: #fee2e2; color: #991b1b; }
-    .mrow { display: grid; grid-template-columns: 82px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
-    .mrow:last-child { border-bottom: 0; }
-    .mrow b { font-size: 12px; } .mrow span { color: var(--muted); font-size: 12px; }
-    .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
-    .bar div { width: 66%; height: 100%; background: var(--ok); }
+    /* "yang dibutuhkan" box */
+    .need { border: 1px solid var(--line); border-radius: var(--radius); }
+    .need h2 { font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--soft); border-radius: var(--radius) var(--radius) 0 0; }
+    .need ul { list-style: none; margin: 0; padding: 0; }
+    .need li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    .need li:last-child { border-bottom: 0; }
+    .need .ico { width: 36px; height: 36px; border-radius: 6px; background: var(--tint); color: var(--navy); display: grid; place-items: center; }
+    .need b { display: block; font-weight: 500; }
+    .need span { font-size: 14px; color: var(--muted); }
 
     /* sections */
-    section { padding: 64px 0; }
-    section.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    h2 { font-size: clamp(26px, 3.4vw, 34px); margin: 0 0 8px; letter-spacing: -.01em; }
-    .sub { color: var(--muted); margin: 0 0 32px; max-width: 640px; }
-    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
-    @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
-    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-    section.alt .card { background: var(--bg); box-shadow: none; }
-    .steps .card::before { counter-increment: s; content: counter(s); display: inline-flex; width: 32px; height: 32px; border-radius: 10px; background: var(--brand); color: #fff; font-weight: 800; align-items: center; justify-content: center; margin-bottom: 12px; }
-    .card h3 { margin: 0 0 6px; font-size: 17px; }
-    .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+    section.soft { background: var(--soft); }
+    .head { max-width: 640px; margin-bottom: 32px; }
+    h2.title { font-size: 26px; letter-spacing: -.01em; font-weight: 600; margin: 0 0 8px; }
+    .head p { color: var(--muted); margin: 0; }
 
-    /* guide */
-    .guide { display: grid; gap: 18px; }
-    .gstep { display: grid; grid-template-columns: 56px 1fr; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
-    @media (max-width: 560px) { .gstep { grid-template-columns: 1fr; } }
-    .gnum { width: 56px; height: 56px; border-radius: 16px; background: var(--brand-soft); color: var(--brand); font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; }
-    .gstep h3 { margin: 4px 0 8px; font-size: 19px; }
-    .gstep ol, .gstep ul { margin: 8px 0 0; padding-left: 20px; }
-    .gstep li { margin-bottom: 6px; }
-    .gstep .btn { margin-top: 14px; padding: 11px 16px; font-size: 14px; }
-    .tip { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--brand-soft); font-size: 14px; }
-    .warn { background: color-mix(in srgb, var(--accent) 22%, var(--surface)); }
+    /* langkah */
+    ol.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+    ol.steps > li { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 20px; padding-bottom: 36px; counter-increment: s; }
+    ol.steps > li::before { content: counter(s); width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--navy); color: var(--navy); font-weight: 600; font-size: 14px; display: grid; place-items: center; background: #fff; position: relative; z-index: 1; }
+    ol.steps > li:not(:last-child)::after { content: ""; position: absolute; left: 15.5px; top: 34px; bottom: 2px; width: 1px; background: var(--line); }
+    ol.steps > li:last-child { padding-bottom: 0; }
+    .step h3 { font-size: 18px; font-weight: 600; margin: 4px 0 6px; }
+    .step > p { margin: 0 0 12px; color: var(--muted); }
+    .step ol, .step ul { margin: 0; padding-left: 20px; }
+    .step li { margin-bottom: 6px; }
+    .step .btn { margin-top: 14px; }
 
-    /* tabel kolom */
-    .tablewrap { overflow-x: auto; margin-top: 12px; border: 1px solid var(--line); border-radius: 12px; }
-    table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
-    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-    th { background: var(--brand-soft); font-size: 13px; }
+    .note { display: flex; gap: 10px; margin-top: 14px; padding: 12px 14px; border-radius: var(--radius); background: var(--tint); font-size: 14px; color: #1D3557; }
+    .note .ic { width: 17px; height: 17px; margin-top: 2px; color: var(--navy); }
+    .note.warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: #5B4410; }
+    .note.warn .ic { color: #A16207; }
+
+    /* tab platform */
+    .tabs { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; margin-top: 4px; }
+    .tablist { display: flex; border-bottom: 1px solid var(--line); }
+    .tablist button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border: 0; background: none; font-family: inherit; font-weight: 500; font-size: 15px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tablist button[aria-selected="true"] { color: var(--navy); border-bottom-color: var(--navy); }
+    .tablist button:hover { color: var(--navy); }
+    .tabpanel { padding: 20px 22px; }
+    .tabpanel[hidden] { display: none; }
+    .tabpanel ol { padding-left: 20px; margin: 0; }
+    .tabpanel li { margin-bottom: 8px; }
+
+    /* tabel format */
+    .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+    th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-weight: 600; font-size: 13px; color: var(--muted); background: var(--soft); }
     tr:last-child td { border-bottom: 0; }
-    td:first-child { font-weight: 700; white-space: nowrap; }
+    td:first-child { font-weight: 500; white-space: nowrap; }
+    .req { font-size: 12px; font-weight: 500; color: var(--navy); }
+    .opt { font-size: 12px; color: var(--muted); }
 
     /* faq */
-    details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 10px; }
-    section.alt details { background: var(--bg); }
-    summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+    .faq { border-top: 1px solid var(--line); max-width: 820px; }
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 2px; font-weight: 500; }
     summary::-webkit-details-marker { display: none; }
-    summary::after { content: "+"; color: var(--brand); font-size: 20px; line-height: 1; }
-    details[open] summary::after { content: "–"; }
-    details p, details ul { color: var(--muted); margin: 10px 0 0; font-size: 15px; }
+    summary .ic { color: var(--muted); transition: transform .2s; }
+    details[open] summary .ic { transform: rotate(180deg); }
+    details .ans { padding: 0 2px 18px; color: var(--muted); }
+    details .ans p { margin: 0 0 8px; }
+    details .ans ul { margin: 0; padding-left: 20px; }
 
-    footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
+    footer { padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
     footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="wrap">
-      <a class="logo" href="#"><img src="assets/icon.png" alt="">AutoKonvert</a>
-      <ul>
-        <li><a href="#cara-kerja">Cara kerja</a></li>
-        <li><a href="#panduan">Panduan</a></li>
-        <li><a href="#iphone">iPhone</a></li>
-        <li><a href="#template">Format Excel</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-    </div>
-  </nav>
+  <!-- set ikon (gaya garis 24px) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h8M12 13v4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-5-5L5 21"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M16 4.5h2a2 2 0 0 1 2 2V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+    <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="11" rx="1.5"/><path d="M2 19.5h20"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 0 9z"/></symbol>
+  </svg>
 
-  <header class="hero">
-    <div class="wrap grid">
-      <div>
-        <span class="pill">Untuk mahasiswa IPB University</span>
-        <h1>Isi Log Aktivitas <span>sekali klik</span>, bukan satu per satu.</h1>
-        <p class="lead">Tulis semua logbook kegiatanmu (MPKMB, ospek, kepanitiaan, lomba) di Excel, siapkan fotonya, lalu biarkan ekstensi AutoKonvert mengisinya ke Student Portal.</p>
-        <div class="cta">
-          <a class="btn primary" href="assets/template-logbook-autokonvert.xlsx" download>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M4 19h16"/></svg>
-            Download Template Excel
-          </a>
-          <a class="btn ghost" href="assets/autokonvert-extension.zip" download>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
-            Download Ekstensi Chrome
-          </a>
-        </div>
-        <p class="hero-note">Gratis · Tidak menyimpan password · Laptop (Chrome/Edge) &amp; <a href="#iphone">iPhone (Safari)</a></p>
-      </div>
-      <div class="mock" aria-hidden="true">
-        <div class="mock-head">⚡ AutoKonvert Logbook<small>MPKMB IPB University 2025 · 7 Jul – 31 Agu 2025</small></div>
-        <div class="mock-body">
-          <div class="chips"><span class="chip c1">Siap: 12</span><span class="chip c2">Berhasil: 24</span><span class="chip c3">Perlu diperbaiki: 1</span></div>
-          <div>
-            <div class="mrow"><b>07/07/2025</b><span>Pembukaan MPKMB dan pengenalan IPB</span><span class="chip c2">berhasil</span></div>
-            <div class="mrow"><b>08/07/2025</b><span>Materi kepemimpinan dan softskill</span><span class="chip c2">berhasil</span></div>
-            <div class="mrow"><b>09/07/2025</b><span>Mentoring kelompok bersama pendamping</span><span class="chip c1">siap</span></div>
-          </div>
-          <div class="bar"><div></div></div>
-        </div>
-      </div>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#"><span class="mark"><svg class="ic"><use href="#i-zap"/></svg></span>AutoKonvert</a>
+      <nav class="links" aria-label="Navigasi">
+        <a href="#cara-pakai">Cara pakai</a>
+        <a href="#format">Format Excel</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn outline sm" href="assets/template-logbook-autokonvert.xlsx" download><svg class="ic"><use href="#i-download"/></svg>Template</a>
     </div>
   </header>
 
-  <section class="alt" id="cara-kerja">
-    <div class="wrap">
-      <h2>Cara kerjanya</h2>
-      <p class="sub">Empat langkah. Setelah ekstensi terpasang, kamu cukup mengulang langkah 3 dan 4 setiap kali ada logbook baru.</p>
-      <div class="steps">
-        <div class="card"><h3>Isi template</h3><p>Satu baris Excel untuk satu log: tanggal, jam, lokasi, keterangan, dan nama file foto.</p></div>
-        <div class="card"><h3>Pasang ekstensi</h3><p>Cukup sekali. Ekstensi hanya aktif di halaman Log Aktivitas Student Portal.</p></div>
-        <div class="card"><h3>Buka Log Aktivitas</h3><p>Login seperti biasa, buka Log aktivitas yang masih Draft, lalu klik tombol ⚡.</p></div>
-        <div class="card"><h3>Cek lalu kirim</h3><p>Pilih Excel dan foto, periksa pratinjaunya, lalu kirim. Progres tampil per baris.</p></div>
+  <main>
+    <div class="hero">
+      <div class="wrap grid">
+        <div>
+          <p class="eyebrow">Alat bantu untuk Log Aktivitas Student Portal IPB</p>
+          <h1>Isi semua log aktivitas dari satu file Excel.</h1>
+          <p class="lead">Tulis logbook MPKMB, kepanitiaan, atau lomba di Excel. AutoKonvert mengisinya ke Student Portal satu per satu, lengkap dengan foto bukti.</p>
+          <div class="cta">
+            <a class="btn primary" href="assets/template-logbook-autokonvert.xlsx" download><svg class="ic"><use href="#i-download"/></svg>Unduh template Excel</a>
+            <a class="btn outline" href="#cara-pakai">Cara pakai<svg class="ic"><use href="#i-arrow"/></svg></a>
+          </div>
+          <ul class="facts">
+            <li><svg class="ic"><use href="#i-check"/></svg>Password tidak disimpan</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>Foto dari Google Drive</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>Laptop &amp; iPhone</li>
+          </ul>
+        </div>
+        <aside class="need" aria-label="Yang perlu disiapkan">
+          <h2>Yang perlu disiapkan</h2>
+          <ul>
+            <li><span class="ico"><svg class="ic"><use href="#i-clipboard"/></svg></span><div><b>Aktivitas berstatus Draft</b><span>Dibuat dulu di menu Kemahasiswaan → Aktivitas.</span></div></li>
+            <li><span class="ico"><svg class="ic"><use href="#i-sheet"/></svg></span><div><b>Logbook dalam Excel</b><span>Pakai template, atau spreadsheet sendiri dengan judul kolom yang dikenali.</span></div></li>
+            <li><span class="ico"><svg class="ic"><use href="#i-image"/></svg></span><div><b>Foto bukti</b><span>File di perangkat, atau link Google Drive di kolom bukti.</span></div></li>
+          </ul>
+        </aside>
       </div>
     </div>
-  </section>
 
-  <section id="panduan">
-    <div class="wrap">
-      <h2>Panduan lengkap</h2>
-      <p class="sub">Ikuti urutannya. Kalau bingung di satu langkah, lihat bagian FAQ di bawah.</p>
-      <div class="guide">
-
-        <div class="gstep">
-          <div class="gnum">1</div>
-          <div>
+    <section id="cara-pakai">
+      <div class="wrap">
+        <div class="head">
+          <h2 class="title">Cara pakai</h2>
+          <p>Pemasangan cukup sekali. Setelah itu, setiap ada logbook baru kamu hanya perlu mengulang langkah 4.</p>
+        </div>
+        <ol class="steps">
+          <li><div class="step">
             <h3>Buat aktivitas di Student Portal</h3>
-            <p>Logbook hanya bisa ditambahkan ke aktivitas yang sudah dibuat dan masih berstatus <b>Draft</b>.</p>
+            <p>Log hanya bisa ditambahkan ke aktivitas yang masih berstatus <b>Draft</b>.</p>
             <ol>
-              <li>Login ke <a href="https://studentportal.ipb.ac.id" target="_blank" rel="noopener">studentportal.ipb.ac.id</a>.</li>
-              <li>Buka menu <b>Kemahasiswaan → Aktivitas</b>.</li>
-              <li>Klik <b>+ Non-Kompetisi</b> (untuk MPKMB/ospek/pelatihan) atau <b>+ Kompetisi</b> (untuk lomba), isi datanya, lalu <b>Simpan Draft</b>.</li>
+              <li>Login ke <a href="https://studentportal.ipb.ac.id" target="_blank" rel="noopener">studentportal.ipb.ac.id</a>, lalu buka <b>Kemahasiswaan → Aktivitas</b>.</li>
+              <li>Pilih <b>Non-Kompetisi</b> (MPKMB, pelatihan, kepanitiaan) atau <b>Kompetisi</b> (lomba), isi datanya, lalu <b>Simpan Draft</b>.</li>
             </ol>
-          </div>
-        </div>
+          </div></li>
 
-        <div class="gstep">
-          <div class="gnum">2</div>
-          <div>
-            <h3>Download dan isi template Excel</h3>
-            <p>Isi sheet <b>Logbook</b>. Sheet <b>Contoh</b> dan <b>Petunjuk</b> hanya sebagai panduan dan tidak ikut dikirim.</p>
+          <li><div class="step">
+            <h3>Isi template Excel</h3>
+            <p>Satu baris untuk satu log. Isi di sheet <b>Logbook</b>; sheet Contoh dan Petunjuk tidak ikut dikirim.</p>
             <ul>
-              <li>Simpan semua foto bukti di <b>satu folder</b>.</li>
-              <li>Tulis nama file fotonya di kolom <b>Nama File Bukti</b>, persis seperti di laptop (misalnya <code>hari1.jpg</code>).</li>
+              <li>Kolom bukti boleh berisi nama file foto (mis. <code>hari1.jpg</code>) atau link Google Drive.</li>
+              <li>Bisa diisi di Google Sheets, lalu unduh sebagai <b>Microsoft Excel (.xlsx)</b>.</li>
             </ul>
-            <a class="btn primary" href="assets/template-logbook-autokonvert.xlsx" download>Download Template Excel</a>
-            <div class="tip">💡 Bisa juga diisi di Google Sheets. Setelah selesai, pilih <b>File → Download → Microsoft Excel (.xlsx)</b>.</div>
-          </div>
-        </div>
+            <a class="btn outline sm" href="assets/template-logbook-autokonvert.xlsx" download><svg class="ic"><use href="#i-download"/></svg>Unduh template</a>
+          </div></li>
 
-        <div class="gstep">
-          <div class="gnum">3</div>
-          <div>
-            <h3>Pasang ekstensi di Chrome (cukup sekali)</h3>
+          <li><div class="step">
+            <h3>Pasang AutoKonvert</h3>
+            <p>Pilih perangkat yang kamu pakai.</p>
+            <div class="tabs">
+              <div class="tablist" role="tablist" aria-label="Perangkat">
+                <button role="tab" id="tab-laptop" aria-controls="panel-laptop" aria-selected="true"><svg class="ic"><use href="#i-laptop"/></svg>Laptop</button>
+                <button role="tab" id="tab-iphone" aria-controls="panel-iphone" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-phone"/></svg>iPhone</button>
+              </div>
+              <div class="tabpanel" role="tabpanel" id="panel-laptop" aria-labelledby="tab-laptop">
+                <ol>
+                  <li>Unduh file ekstensi, klik kanan, lalu pilih <b>Extract All</b>. Simpan foldernya di tempat yang tidak akan dihapus, misalnya <code>Documents</code>.</li>
+                  <li>Buka Chrome, ketik <code>chrome://extensions</code> di kolom alamat, lalu nyalakan <b>Developer mode</b> di kanan atas.</li>
+                  <li>Klik <b>Load unpacked</b> dan pilih folder <code>autokonvert-extension</code> (yang berisi <code>manifest.json</code>).</li>
+                  <li>Klik ikon ekstensi di toolbar lalu pin <b>AutoKonvert</b> agar mudah ditemukan.</li>
+                </ol>
+                <a class="btn primary sm" href="assets/autokonvert-extension.zip" download><svg class="ic"><use href="#i-download"/></svg>Unduh ekstensi (.zip)</a>
+                <div class="note"><svg class="ic"><use href="#i-info"/></svg><span>Bisa juga di Microsoft Edge (<code>edge://extensions</code>) dan Brave. Jangan hapus atau pindahkan folder ekstensi setelah dipasang.</span></div>
+              </div>
+              <div class="tabpanel" role="tabpanel" id="panel-iphone" aria-labelledby="tab-iphone" hidden>
+                <ol>
+                  <li>Pasang aplikasi <b>Userscripts</b> dari App Store (gratis, iOS 15.1 ke atas). Buka sekali dan pilih folder penyimpanan; folder bawaan sudah cukup.</li>
+                  <li>Buka <b>Pengaturan → Apps → Safari → Ekstensi</b> (iOS 17: <b>Pengaturan → Safari → Ekstensi</b>), aktifkan <b>Userscripts</b>, lalu izinkan untuk semua situs.</li>
+                  <li>Buka halaman ini di <b>Safari</b> dan ketuk tombol di bawah. Setelah kode tampil, ketuk ikon <b>AA</b> di kolom alamat → <b>Userscripts</b> → <b>Install</b>.</li>
+                </ol>
+                <a class="btn primary sm" href="assets/autokonvert.user.js"><svg class="ic"><use href="#i-download"/></svg>Pasang di iPhone</a>
+                <div class="note"><svg class="ic"><use href="#i-info"/></svg><span>Tombol Install tidak muncul? Tekan lama tombol di atas, pilih <b>Unduh File Tertaut</b>, lalu pindahkan <code>autokonvert.user.js</code> ke folder Userscripts lewat aplikasi Files.</span></div>
+              </div>
+            </div>
+          </div></li>
+
+          <li><div class="step">
+            <h3>Kirim logbook</h3>
             <ol>
-              <li>Download <b>autokonvert-extension.zip</b>, lalu <b>klik kanan → Extract All</b>. Simpan foldernya di tempat yang tidak akan dihapus, misalnya <code>Documents</code>.</li>
-              <li>Buka Chrome, ketik <code>chrome://extensions</code> di kolom alamat, lalu tekan <kbd>Enter</kbd>.</li>
-              <li>Nyalakan <b>Developer mode</b> di pojok kanan atas.</li>
-              <li>Klik <b>Load unpacked</b>, lalu pilih folder <code>autokonvert-extension</code> hasil extract (folder yang berisi file <code>manifest.json</code>).</li>
-              <li>Ekstensi <b>AutoKonvert Logbook IPB</b> muncul. Klik ikon puzzle 🧩 di toolbar lalu pin ⚡ agar mudah ditemukan.</li>
+              <li>Di Student Portal, buka <b>Aktivitas</b> lalu tombol <b>Log</b> pada aktivitas Draft.</li>
+              <li>Tekan tombol <b>AutoKonvert</b> di kanan bawah (di iPhone: bawah layar).</li>
+              <li>Pilih file Excel. Foto dari link Google Drive diambil otomatis; foto lain dipilih dari perangkat.</li>
+              <li>Centang dosen penggerak, periksa pratinjau, lalu tekan <b>Kirim</b>.</li>
             </ol>
-            <a class="btn ghost" href="assets/autokonvert-extension.zip" download>Download Ekstensi (.zip)</a>
-            <div class="tip warn">⚠️ Jangan hapus atau pindahkan folder ekstensi setelah dipasang, karena ekstensinya akan berhenti bekerja. Ekstensi ini juga bisa dipakai di Microsoft Edge (<code>edge://extensions</code>) dan Brave.</div>
-          </div>
-        </div>
-
-        <div class="gstep">
-          <div class="gnum">4</div>
-          <div>
-            <h3>Kirim logbook otomatis</h3>
-            <ol>
-              <li>Di Student Portal, buka <b>Aktivitas</b> lalu klik tombol <b>Log</b> (ikon daftar) pada aktivitas Draft.</li>
-              <li>Klik tombol <b>⚡ AutoKonvert Logbook</b> di pojok kanan bawah.</li>
-              <li><b>Pilih Excel</b>, lalu <b>Pilih Foto</b>. Di jendela pilih file, buka folder foto dan tekan <kbd>Ctrl</kbd>+<kbd>A</kbd> untuk memilih semuanya.</li>
-              <li>Centang <b>Dosen Penggerak</b>, lalu cek tabel pratinjau. Baris merah perlu diperbaiki di Excel dulu.</li>
-              <li>Klik <b>Kirim</b>. Tunggu sampai selesai, lalu klik <b>Muat ulang halaman</b> untuk melihat hasilnya.</li>
-            </ol>
-            <div class="tip">✅ Log yang sudah ada di portal (tanggal dan jam mulai sama) otomatis dilewati, jadi aman kalau kamu mengirim ulang file yang sama.</div>
-          </div>
-        </div>
-
+            <div class="note"><svg class="ic"><use href="#i-check"/></svg><span>Log yang sudah ada di portal (tanggal, jam, dan keterangan sama) otomatis dilewati, jadi aman mengirim ulang file yang sama.</span></div>
+          </div></li>
+        </ol>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="alt" id="iphone">
-    <div class="wrap">
-      <h2>Pakai di iPhone</h2>
-      <p class="sub">Chrome di HP tidak bisa memasang ekstensi. Di iPhone, AutoKonvert berjalan di <b>Safari</b> lewat aplikasi gratis <b>Userscripts</b>. Fiturnya sama dengan versi laptop, termasuk foto dari Google Drive.</p>
-      <div class="guide">
-        <div class="gstep">
-          <div class="gnum">1</div>
-          <div>
-            <h3>Pasang aplikasi Userscripts</h3>
-            <ol>
-              <li>Unduh <b>Userscripts</b> dari App Store (gratis). Butuh iOS 15.1 atau lebih baru.</li>
-              <li>Buka aplikasinya sekali, lalu ikuti petunjuk untuk memilih folder penyimpanan script. Folder bawaan sudah cukup.</li>
-              <li>Buka <b>Pengaturan → Safari → Ekstensi</b> (di iOS 18: <b>Pengaturan → Apps → Safari → Ekstensi</b>), lalu aktifkan <b>Userscripts</b>.</li>
-              <li>Pada bagian izin situs, izinkan <code>studentportal.ipb.ac.id</code> dan <code>drive.google.com</code>, atau pilih <b>Izinkan</b> untuk semua situs.</li>
-            </ol>
-          </div>
+    <section class="soft" id="format">
+      <div class="wrap">
+        <div class="head">
+          <h2 class="title">Format Excel</h2>
+          <p>Urutan kolom bebas selama judulnya dikenali. Baris kosong dan baris TOTAL dilewati. Spreadsheet sendiri dengan judul seperti <code>Deskripsi Kegiatan</code>, <code>Tempat Pelaksanaan</code>, atau <code>Dokumentasi</code> juga bisa dipakai, begitu pula isian seperti <code>Online, Zoom Meeting</code> dalam satu kolom.</p>
         </div>
-        <div class="gstep">
-          <div class="gnum">2</div>
-          <div>
-            <h3>Pasang script AutoKonvert</h3>
-            <ol>
-              <li>Buka halaman ini di <b>Safari</b> iPhone, lalu ketuk tombol di bawah.</li>
-              <li>Akan muncul halaman berisi kode. Ketuk ikon <b>ekstensi</b> di kolom alamat (ikon puzzle 🧩 atau <b>AA</b>), pilih <b>Userscripts</b>, lalu ketuk <b>Install</b>.</li>
-            </ol>
-            <a class="btn primary" href="assets/autokonvert.user.js">Pasang di iPhone (userscript)</a>
-            <div class="tip">💡 Kalau tombol <b>Install</b> tidak muncul, simpan filenya dulu: tekan lama tombol di atas, pilih <b>Unduh File Tertaut</b>, lalu pindahkan <code>autokonvert.user.js</code> dari aplikasi Files ke folder Userscripts.</div>
-          </div>
-        </div>
-        <div class="gstep">
-          <div class="gnum">3</div>
-          <div>
-            <h3>Pakai di Student Portal</h3>
-            <ol>
-              <li>Di Safari, login ke Student Portal dan buka <b>Log</b> aktivitas berstatus Draft.</li>
-              <li>Ketuk tombol <b>⚡ AutoKonvert Logbook</b> di bagian bawah layar.</li>
-              <li><b>Pilih Excel</b> dari aplikasi Files. Kalau logbook ada di Google Sheets, buka di aplikasi Google Sheets lalu pilih <b>Bagikan &amp; ekspor → Simpan sebagai → Excel</b>.</li>
-              <li>Foto dari link Google Drive diambil otomatis. Untuk baris lain, ketuk <b>Dari HP</b> untuk memilih foto dari galeri (foto HEIC iPhone otomatis diubah ke JPG).</li>
-              <li>Cek kartu-kartu pratinjau, lalu ketuk <b>Kirim</b>.</li>
-            </ol>
-            <div class="tip warn">⚠️ Biarkan Safari tetap terbuka dan layar menyala sampai semua log selesai terkirim.</div>
-          </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Kolom</th><th></th><th>Format</th><th>Contoh</th></tr></thead>
+            <tbody>
+              <tr><td>Tanggal</td><td><span class="req">Wajib</span></td><td>DD/MM/YYYY, di dalam periode aktivitas</td><td>07/07/2025</td></tr>
+              <tr><td>Jam Mulai</td><td><span class="req">Wajib</span></td><td>HH:MM, 24 jam</td><td>08:00</td></tr>
+              <tr><td>Jam Selesai</td><td><span class="req">Wajib</span></td><td>HH:MM, setelah jam mulai</td><td>12:30</td></tr>
+              <tr><td>Jenis Kegiatan</td><td><span class="opt">Opsional</span></td><td>Berita Acara Kegiatan, Pembimbingan, atau Ujian. Kosong berarti Kegiatan.</td><td>Berita Acara Kegiatan</td></tr>
+              <tr><td>Tipe Penyelenggaraan</td><td><span class="req">Wajib</span></td><td>Offline, Online, atau Hybrid</td><td>Offline</td></tr>
+              <tr><td>Lokasi</td><td><span class="req">Wajib</span></td><td>Teks bebas</td><td>Kampus IPB Dramaga</td></tr>
+              <tr><td>Keterangan</td><td><span class="req">Wajib</span></td><td>Uraian kegiatan</td><td>Pembukaan MPKMB</td></tr>
+              <tr><td>Nama File Bukti</td><td><span class="opt">Disarankan</span></td><td>Nama file JPG/PNG/PDF, atau link Google Drive (folder atau file). Foto besar dikompres otomatis; PDF maks. 10 MB.</td><td>hari1.jpg</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="template">
-    <div class="wrap">
-      <h2>Format kolom Excel</h2>
-      <p class="sub">Urutan kolom boleh berbeda, asalkan judul kolomnya sama. Baris kosong dan baris <b>TOTAL</b> dilewati.</p>
-      <div class="tip" style="margin-bottom:16px">📋 <b>Sudah punya spreadsheet logbook sendiri?</b> Biasanya bisa langsung dipakai tanpa memakai template. Ekstensi mengenali judul kolom seperti <code>Deskripsi Kegiatan</code>, <code>Tempat Pelaksanaan</code>, dan <code>Dokumentasi</code>. Isian <code>Online, Zoom Meeting</code> di satu kolom otomatis dipisah menjadi tipe dan lokasi. Judul di atas tabel, tanggal yang di-merge, jam format AM/PM, dan beberapa sheet sekaligus juga didukung (sheet dipilih di panel).</div>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>Kolom</th><th>Wajib</th><th>Format / pilihan</th><th>Contoh</th></tr></thead>
-          <tbody>
-            <tr><td>Tanggal</td><td>Ya</td><td>DD/MM/YYYY, harus di dalam periode aktivitas</td><td>07/07/2025</td></tr>
-            <tr><td>Jam Mulai</td><td>Ya</td><td>HH:MM (24 jam)</td><td>08:00</td></tr>
-            <tr><td>Jam Selesai</td><td>Ya</td><td>HH:MM, harus setelah jam mulai</td><td>12:30</td></tr>
-            <tr><td>Jenis Kegiatan</td><td>Tidak</td><td>Berita Acara Kegiatan / Pembimbingan / Ujian. Kosong = Kegiatan</td><td>Berita Acara Kegiatan</td></tr>
-            <tr><td>Tipe Penyelenggaraan</td><td>Ya</td><td>Offline / Online / Hybrid</td><td>Offline</td></tr>
-            <tr><td>Lokasi</td><td>Ya</td><td>Teks bebas</td><td>Kampus IPB Dramaga, Bogor</td></tr>
-            <tr><td>Keterangan</td><td>Ya</td><td>Uraian kegiatan</td><td>Pembukaan MPKMB dan pengenalan IPB</td></tr>
-            <tr><td>Nama File Bukti</td><td>Disarankan</td><td>Nama file JPG/PNG/PDF di laptop, <b>atau link Google Drive</b> (folder/file, boleh berupa teks yang diberi hyperlink). Foto &gt; 2 MB dikompres otomatis, PDF maks. 10 MB</td><td>hari1.jpg</td></tr>
-          </tbody>
-        </table>
+    <section id="faq">
+      <div class="wrap">
+        <div class="head"><h2 class="title">Pertanyaan umum</h2></div>
+        <div class="faq">
+          <details>
+            <summary>Apakah akun dan password saya aman?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><p>Kamu login sendiri di Student Portal seperti biasa. AutoKonvert hanya memakai sesi login yang sudah ada dan mengirim data ke Student Portal, serta mengambil foto dari Google Drive jika kamu memakai link Drive. Tidak ada password atau data yang dikirim ke server lain.</p></div>
+          </details>
+          <details>
+            <summary>Tombol AutoKonvert tidak muncul<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><ul>
+              <li>Pastikan sedang membuka studentportal.ipb.ac.id (bukan halaman login), lalu muat ulang halaman.</li>
+              <li>Laptop: cek ekstensi aktif di <code>chrome://extensions</code>.</li>
+              <li>iPhone: pakai Safari, dan pastikan Userscripts aktif serta diizinkan untuk situs ini (ikon <b>AA</b> → Userscripts).</li>
+            </ul></div>
+          </details>
+          <details>
+            <summary>Muncul pesan "Log aktivitas ini tidak bisa ditambah"<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><p>Aktivitas itu sudah difinalisasi atau sedang diverifikasi. Log hanya bisa ditambah pada aktivitas berstatus Draft.</p></div>
+          </details>
+          <details>
+            <summary>Foto saya ada di Google Drive<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><p>Tidak perlu diunduh. Jika sel di kolom bukti berisi link Drive (termasuk teks yang diberi hyperlink), fotonya diambil otomatis. Untuk link folder, satu foto dipilih per baris dan bisa diganti lewat tombol <b>Galeri</b>.</p>
+              <p>Folder harus bisa dibuka oleh akun Google yang sedang login di browser, atau aksesnya diatur ke "Siapa saja yang memiliki link". Jika tidak bisa dibuka, pilih fotonya dari perangkat.</p></div>
+          </details>
+          <details>
+            <summary>Nama foto tidak ditemukan padahal sudah dipilih<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><p>Nama di Excel harus sama dengan nama file. Huruf besar/kecil dan ekstensi tidak berpengaruh, jadi <code>hari1</code> cocok dengan <code>hari1.jpg</code>. Jika kolom berisi catatan (mis. "Dokumentasi masing-masing"), pilih foto per baris dari tabel pratinjau.</p></div>
+          </details>
+          <details>
+            <summary>Ada log yang gagal atau salah kirim<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="ans"><p>Penyebab gagal tertulis di tabel pratinjau; perbaiki lalu tekan <b>Kirim ulang yang gagal</b>. Log yang salah kirim bisa dihapus manual dari tabel Log Aktivitas selama aktivitas masih Draft.</p></div>
+          </details>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <section class="alt" id="faq">
-    <div class="wrap">
-      <h2>Pertanyaan umum</h2>
-      <p class="sub">Belum terjawab? Cek dulu pesan error di tabel pratinjau. Biasanya penyebabnya tertulis di sana.</p>
-      <details>
-        <summary>Apakah akun dan password saya aman?</summary>
-        <p>Ya. Kamu login sendiri di Student Portal seperti biasa. Ekstensi hanya bekerja di halaman Log Aktivitas dan memakai sesi login yang sudah ada. Tidak ada password, cookie, atau data yang dikirim ke server lain selain Student Portal.</p>
-      </details>
-      <details>
-        <summary>Tombol ⚡ AutoKonvert tidak muncul.</summary>
-        <ul>
-          <li>Pastikan kamu berada di halaman <b>Log Aktivitas</b> (alamatnya mengandung <code>LogAktivitasKampusMerdeka</code>), bukan di daftar Aktivitas.</li>
-          <li>Pastikan ekstensi aktif di <code>chrome://extensions</code>, lalu muat ulang halaman dengan <kbd>F5</kbd>.</li>
-        </ul>
-      </details>
-      <details>
-        <summary>Muncul pesan "Log aktivitas ini tidak bisa ditambah".</summary>
-        <p>Aktivitas tersebut sudah difinalisasi atau sedang diverifikasi. Log hanya bisa ditambah pada aktivitas berstatus <b>Draft</b>.</p>
-      </details>
-      <details>
-        <summary>Foto "xxx.jpg" belum dipilih, padahal sudah.</summary>
-        <p>Nama di Excel harus sama dengan nama file aslinya. Penulisan huruf besar/kecil dan ekstensi tidak berpengaruh, jadi <code>hari1</code> cocok dengan <code>hari1.jpg</code>. Kalau kolomnya berisi catatan (misalnya "Dokumentasi masing-masing"), klik tombol <b>Pilih</b> di kolom Bukti pada baris itu untuk memilih fotonya satu per satu.</p>
-      </details>
-      <details>
-        <summary>Foto saya ada di Google Drive. Harus diunduh dulu?</summary>
-        <p>Tidak perlu. Kalau sel di kolom bukti berisi link Google Drive (link folder atau file, termasuk teks yang diberi hyperlink), ekstensi mengambil fotonya otomatis. Untuk link folder, satu foto dipilih per baris, dan kamu bisa menggantinya lewat tombol <b>Galeri</b>. Folder harus bisa dibuka oleh akun Google yang sedang login di Chrome, atau aksesnya diatur ke <b>"Siapa saja yang memiliki link"</b>. Kalau tidak bisa dibuka, klik <b>Buka folder</b>, unduh fotonya, lalu pilih lewat tombol <b>Komputer</b>.</p>
-      </details>
-      <details>
-        <summary>Ada log yang gagal terkirim.</summary>
-        <p>Pesan penyebabnya muncul di tabel. Perbaiki datanya, lalu klik <b>Kirim ulang yang gagal</b>. Kalau sesi login habis, login ulang, muat ulang halaman, lalu kirim lagi. Log yang sudah berhasil tidak akan dikirim dua kali.</p>
-      </details>
-      <details>
-        <summary>Saya salah kirim. Bagaimana menghapusnya?</summary>
-        <p>Hapus manual lewat tombol hapus di tabel Log Aktivitas Student Portal, selama aktivitasnya masih Draft.</p>
-      </details>
-      <details>
-        <summary>Bisa dipakai di HP?</summary>
-        <p>Bisa. Di <b>iPhone</b>, pakai Safari dengan aplikasi Userscripts (lihat bagian <a href="#iphone">Pakai di iPhone</a>). Di laptop atau PC, pakai ekstensi untuk Chrome, Edge, atau Brave. Android belum ada panduannya.</p>
-      </details>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <footer>
     <div class="wrap">
-      <span>AutoKonvert Logbook IPB · alat bantu buatan mahasiswa, <b>bukan aplikasi resmi IPB University</b>.</span>
-      <span>Isi logbook sesuai kegiatan yang benar-benar kamu ikuti.</span>
+      <span>AutoKonvert Logbook IPB. Alat bantu buatan mahasiswa, bukan aplikasi resmi IPB University.</span>
+      <span>Isi logbook sesuai kegiatan yang benar-benar diikuti.</span>
     </div>
   </footer>
+
+  <script>
+    // tab perangkat; otomatis pilih iPhone jika dibuka dari iPhone/iPad atau lewat #iphone
+    (function () {
+      var tabs = [].slice.call(document.querySelectorAll('[role="tab"]'));
+      function pilih(tab) {
+        tabs.forEach(function (t) {
+          var aktif = t === tab;
+          t.setAttribute("aria-selected", aktif);
+          t.tabIndex = aktif ? 0 : -1;
+          document.getElementById(t.getAttribute("aria-controls")).hidden = !aktif;
+        });
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener("click", function () { pilih(t); });
+        t.addEventListener("keydown", function (e) {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          var n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+          pilih(n); n.focus();
+        });
+      });
+      var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      if (ios || location.hash === "#iphone") {
+        pilih(document.getElementById("tab-iphone"));
+        if (location.hash === "#iphone") document.getElementById("cara-pakai").scrollIntoView();
+      }
+    })();
+  </script>
 </body>
 </html>

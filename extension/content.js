@@ -48,6 +48,30 @@
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+  // ikon garis 24px (gaya sama dengan website)
+  const IKON = {
+    zap: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    sheet: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h8M12 13v4"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-5-5L5 21"/>',
+    file: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',
+    cloud: '<path d="M7 18.5a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 0 9z"/>',
+    upload: '<path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/>',
+    grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+    external: '<path d="M15 3h6v6M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+    arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+    alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+    xcircle: '<circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+    loader: '<path d="M21 12a9 9 0 1 1-6.2-8.56"/>',
+    send: '<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+    refresh: '<path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/>',
+    report: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+  };
+  const ic = (nama, kelas = "") =>
+    `<svg class="ic ${kelas}" viewBox="0 0 24 24" aria-hidden="true">${IKON[nama] || ""}</svg>`;
+
   // ------------------------------------------------------------ state panel
   const state = {
     rows: [], // hasil parse Excel
@@ -313,7 +337,7 @@
               status: "gagal",
               error:
                 res.error === "privat"
-                  ? `tidak bisa dibuka (akses dibatasi). Login ke Google di browser ini dengan akun yang punya akses lalu muat ulang halaman, minta pemilik folder mengubah akses ke "Siapa saja yang memiliki link", atau klik "Buka folder", unduh fotonya, lalu pilih lewat "${LOKAL}"`
+                  ? "tidak bisa dibuka karena aksesnya dibatasi"
                   : `tidak bisa dibuka (${res.error})`,
             });
         } catch (e) {
@@ -499,96 +523,150 @@
   root.innerHTML = `
     <style>
       :host { all: initial; }
-      * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", system-ui, sans-serif; }
-      .fab { position: fixed; right: 22px; bottom: 22px; z-index: 2147483000; border: 0; cursor: pointer;
-        background: #0b5394; color: #fff; padding: 12px 18px; border-radius: 999px; font-size: 14px; font-weight: 600;
-        box-shadow: 0 6px 20px rgba(11,83,148,.35); display: flex; align-items: center; gap: 8px; }
-      .fab:hover { background: #094479; }
-      .panel { position: fixed; right: 22px; bottom: 22px; z-index: 2147483001; width: min(760px, calc(100vw - 44px));
-        max-height: calc(100vh - 44px); background: #fff; color: #1f2937; border-radius: 14px; display: none;
-        flex-direction: column; box-shadow: 0 18px 50px rgba(0,0,0,.28); overflow: hidden; font-size: 13px; }
-      .panel.open { display: flex; }
-      .head { background: #0b5394; color: #fff; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
-      .head h2 { margin: 0; font-size: 16px; }
-      .head small { opacity: .85; display: block; font-size: 12px; margin-top: 2px; }
-      .x { background: transparent; border: 0; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
-      .body { padding: 16px 18px; overflow: auto; display: flex; flex-direction: column; gap: 14px; }
-      .step { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 14px; }
-      .step h3 { margin: 0 0 8px; font-size: 13px; display: flex; gap: 8px; align-items: center; }
-      .num { background: #0b5394; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
-        align-items: center; justify-content: center; font-size: 12px; flex: none; }
-      .muted { color: #6b7280; }
-      label.file { display: inline-flex; align-items: center; gap: 8px; background: #eef4fb; border: 1px dashed #0b5394;
-        color: #0b5394; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-      label.file input { display: none; }
-      .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-      .dosen label { display: flex; gap: 8px; align-items: center; padding: 3px 0; }
-      .alert { padding: 10px 12px; border-radius: 8px; background: #fef2f2; color: #991b1b; }
-      .ok { background: #ecfdf5; color: #065f46; }
-      .info { background: #eff6ff; color: #1e3a8a; }
-      .summary { display: flex; gap: 8px; flex-wrap: wrap; }
-      .chip { padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #f3f4f6; }
-      .c-siap { background: #e0f2fe; color: #075985; } .c-error, .c-gagal { background: #fee2e2; color: #991b1b; }
-      .c-berhasil { background: #dcfce7; color: #166534; } .c-duplikat { background: #f3f4f6; color: #4b5563; }
-      .c-mengirim, .c-memuat { background: #fef9c3; color: #854d0e; }
-      td.bukti { max-width: 170px; word-break: break-word; }
-      .galeri { position: fixed; inset: 0; z-index: 2147483002; background: rgba(15,23,42,.55); display: none;
-        align-items: center; justify-content: center; padding: 22px; }
-      .galeri.open { display: flex; }
-      .gbox { background: #fff; color: #1f2937; border-radius: 14px; width: min(720px, 100%); max-height: 100%;
-        display: flex; flex-direction: column; overflow: hidden; font-size: 13px; }
-      .ghead { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
-      .x.dark { color: #374151; }
-      .ggrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; padding: 14px 16px; overflow: auto; }
-      .gitem { border: 2px solid #e5e7eb; border-radius: 10px; padding: 6px; background: #fff; cursor: pointer; text-align: left; }
-      .gitem:hover { border-color: #93c5fd; } .gitem.aktif { border-color: #0b5394; box-shadow: 0 0 0 2px #bfdbfe; }
-      .gthumb { height: 100px; background: #f3f4f6; border-radius: 6px; display: flex; align-items: center; justify-content: center;
-        overflow: hidden; color: #6b7280; font-size: 12px; }
-      .gthumb img { width: 100%; height: 100%; object-fit: cover; }
-      .gname { margin-top: 4px; font-size: 11px; word-break: break-all; color: #374151; }
-      table { width: 100%; border-collapse: collapse; font-size: 12px; }
-      th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-      th { background: #f9fafb; position: sticky; top: 0; }
-      .tablewrap { max-height: 300px; overflow: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
-      .ket { max-width: 240px; }
-      .err { color: #b91c1c; font-size: 11px; } .warn { color: #a16207; font-size: 11px; }
-      .foot { padding: 12px 18px; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; align-items: center; }
-      button.btn { border: 0; border-radius: 8px; padding: 9px 16px; font-weight: 600; cursor: pointer; font-size: 13px; }
-      .primary { background: #0b5394; color: #fff; } .primary:disabled { background: #9ca3af; cursor: not-allowed; }
-      .secondary { background: #f3f4f6; color: #111827; } .danger { background: #dc2626; color: #fff; }
-      a.mini { display: inline-block; text-decoration: none; }
-      a.logitem { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px;
-        border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 8px; color: #0b5394; text-decoration: none; }
-      a.logitem:hover { border-color: #0b5394; background: #eef4fb; }
-      button.mini, a.mini { margin-top: 4px; border: 1px solid #0b5394; background: #fff; color: #0b5394; border-radius: 6px;
-        padding: 2px 8px; font-size: 11px; font-weight: 600; cursor: pointer; }
-      select { padding: 5px 8px; border-radius: 6px; border: 1px solid #d1d5db; font-size: 13px; }
-      .progress { flex: 1; min-width: 160px; height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
-      .progress > div { height: 100%; background: #16a34a; transition: width .3s; }
+      * { box-sizing: border-box; font-family: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif; }
+      .ic { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8;
+        stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; }
+      @keyframes putar { to { transform: rotate(360deg); } }
+      .spin { animation: putar 1s linear infinite; }
 
-      /* ---- layar HP: panel penuh layar, tabel jadi kartu, tombol lebih besar ---- */
+      /* tombol mengambang */
+      .fab { position: fixed; right: 20px; bottom: 20px; z-index: 2147483000; display: flex; align-items: center; gap: 8px;
+        height: 44px; padding: 0 16px; border: 0; border-radius: 8px; cursor: pointer; background: #0B2F5B; color: #fff;
+        font-size: 14px; font-weight: 500; box-shadow: 0 4px 14px rgba(11,47,91,.28); }
+      .fab:hover { background: #08254A; }
+      .fab .ic { width: 17px; height: 17px; stroke-width: 2; }
+
+      /* panel */
+      .panel { position: fixed; right: 20px; bottom: 20px; z-index: 2147483001; width: min(760px, calc(100vw - 40px));
+        max-height: calc(100vh - 40px); background: #fff; color: #0F1B2D; border: 1px solid #E1E7EF; border-radius: 10px;
+        display: none; flex-direction: column; overflow: hidden; font-size: 13.5px; line-height: 1.5;
+        box-shadow: 0 16px 40px rgba(15,27,45,.16); }
+      .panel.open { display: flex; }
+      .head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #E1E7EF; }
+      .mark { width: 30px; height: 30px; border-radius: 6px; background: #0B2F5B; color: #fff; display: grid; place-items: center; flex: none; }
+      .mark .ic { stroke-width: 2; }
+      .head h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+      .head h2 small { font-weight: 400; color: #55627A; font-size: 12px; margin-left: 4px; }
+      .head .sub { display: block; font-size: 12px; color: #55627A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .head .judul { flex: 1; min-width: 0; }
+      .x { width: 32px; height: 32px; border: 0; background: none; color: #55627A; border-radius: 6px; cursor: pointer; display: grid; place-items: center; }
+      .x:hover { background: #F5F8FC; color: #0F1B2D; }
+      .x .ic { width: 18px; height: 18px; }
+      .body { padding: 4px 16px 8px; overflow: auto; display: flex; flex-direction: column; }
+
+      /* langkah: dipisah garis, bukan kotak */
+      .step { padding: 14px 0; border-bottom: 1px solid #EEF2F7; }
+      .step:last-child { border-bottom: 0; }
+      .step h3 { margin: 0 0 10px; font-size: 13.5px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+      .num { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #0B2F5B; color: #0B2F5B; display: inline-grid;
+        place-items: center; font-size: 11.5px; font-weight: 600; flex: none; }
+      .num.ok { background: #0B2F5B; color: #fff; }
+      .num.ok .ic { width: 12px; height: 12px; stroke-width: 2.6; }
+      .muted { color: #55627A; }
+      .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+      label.file { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 1px solid #C9D3E1;
+        border-radius: 8px; color: #0B2F5B; background: #fff; font-weight: 500; cursor: pointer; }
+      label.file:hover { border-color: #0B2F5B; }
+      label.file input { display: none; }
+      .dosen label { display: flex; gap: 10px; align-items: center; padding: 4px 0; cursor: pointer; }
+      .dosen input { accent-color: #0B2F5B; width: 16px; height: 16px; }
+
+      .alert { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 8px;
+        background: #FDF2F2; color: #8A1C1C; border: 1px solid #F5D0D0; }
+      .alert > .ic { margin-top: 2px; }
+      .alert.ok { background: #EFF7F2; color: #1D5B37; border-color: #CFE6D8; }
+      .alert.info { background: #EAF0F8; color: #1D3557; border-color: #D5E0EF; }
+
+      .summary { display: flex; gap: 6px 14px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12.5px; color: #55627A; }
+      .summary span { display: inline-flex; align-items: center; gap: 6px; }
+      .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: #94A3B8; }
+      .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: #334155; }
+      .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #94A3B8; }
+      .c-siap::before, .dot.siap { background: #2563EB; }
+      .c-error::before, .c-gagal::before, .dot.error { background: #DC2626; }
+      .c-berhasil::before, .dot.berhasil { background: #16A34A; }
+      .c-duplikat::before { background: #94A3B8; }
+      .c-mengirim::before, .c-memuat::before, .dot.memuat { background: #D97706; }
+
+      table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #EEF2F7; vertical-align: top; }
+      th { font-weight: 500; color: #55627A; background: #F5F8FC; }
+      .tablewrap { overflow-x: auto; border: 1px solid #E1E7EF; border-radius: 8px; }
+      td:nth-child(2) { white-space: nowrap; }
+      .ket { min-width: 200px; }
+      td.bukti { min-width: 170px; max-width: 220px; word-break: break-word; }
+      .src { display: flex; gap: 6px; align-items: flex-start; }
+      .src .ic { color: #0B2F5B; margin-top: 1px; }
+      .err, .warn { display: flex; gap: 5px; font-size: 11.5px; margin-top: 3px; }
+      .err { color: #B91C1C; } .warn { color: #92600A; }
+      .err .ic, .warn .ic { width: 13px; height: 13px; margin-top: 2px; }
+
+      .foot { padding: 12px 16px; border-top: 1px solid #E1E7EF; display: flex; gap: 10px; justify-content: flex-end;
+        flex-wrap: wrap; align-items: center; background: #FBFCFE; }
+      .foot .chip { margin-right: auto; }
+      button.btn { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 8px;
+        border: 1px solid transparent; font-weight: 500; font-size: 13.5px; cursor: pointer; }
+      .primary { background: #0B2F5B; color: #fff; } .primary:hover { background: #08254A; }
+      .primary:disabled { background: #A8B4C5; cursor: not-allowed; }
+      .secondary { background: #fff; color: #0B2F5B; border-color: #C9D3E1 !important; } .secondary:hover { border-color: #0B2F5B !important; }
+      .danger { background: #fff; color: #B91C1C; border-color: #F0C4C4 !important; }
+      button.mini, a.mini { display: inline-flex; align-items: center; gap: 5px; margin: 6px 6px 0 0; padding: 3px 9px;
+        border: 1px solid #C9D3E1; border-radius: 6px; background: #fff; color: #0B2F5B; font-size: 12px; font-weight: 500;
+        cursor: pointer; text-decoration: none; white-space: nowrap; }
+      button.mini:hover, a.mini:hover { border-color: #0B2F5B; }
+      .mini .ic { width: 13px; height: 13px; }
+      select { height: 34px; padding: 0 8px; border-radius: 8px; border: 1px solid #C9D3E1; font-size: 13.5px; background: #fff; color: #0F1B2D; }
+      .progress { flex: 1; min-width: 160px; height: 6px; background: #E1E7EF; border-radius: 99px; overflow: hidden; }
+      .progress > div { height: 100%; background: #0B2F5B; transition: width .3s; }
+
+      a.logitem { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px;
+        border: 1px solid #E1E7EF; border-radius: 8px; margin-top: 8px; color: #0F1B2D; text-decoration: none; }
+      a.logitem:hover { border-color: #0B2F5B; }
+      a.logitem b { font-weight: 500; }
+      ol.mulai { margin: 0; padding-left: 18px; } ol.mulai li { margin-bottom: 4px; }
+
+      /* galeri foto Drive */
+      .galeri { position: fixed; inset: 0; z-index: 2147483002; background: rgba(15,27,45,.5); display: none;
+        align-items: center; justify-content: center; padding: 20px; }
+      .galeri.open { display: flex; }
+      .gbox { background: #fff; color: #0F1B2D; border-radius: 10px; width: min(720px, 100%); max-height: 100%;
+        display: flex; flex-direction: column; overflow: hidden; font-size: 13.5px; }
+      .ghead { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #E1E7EF; }
+      .ghead b { font-weight: 600; }
+      .ggrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 10px; padding: 14px 16px; overflow: auto; }
+      .gitem { border: 1px solid #E1E7EF; border-radius: 8px; padding: 6px; background: #fff; cursor: pointer; text-align: left; }
+      .gitem:hover { border-color: #0B2F5B; }
+      .gitem.aktif { border-color: #0B2F5B; box-shadow: inset 0 0 0 1px #0B2F5B; }
+      .gthumb { height: 100px; background: #F5F8FC; border-radius: 5px; display: grid; place-items: center; overflow: hidden; color: #8592A8; }
+      .gthumb .ic { width: 22px; height: 22px; }
+      .gthumb img { width: 100%; height: 100%; object-fit: cover; }
+      .gname { margin-top: 5px; font-size: 11.5px; word-break: break-all; color: #334155; }
+
+      button:focus-visible, label.file:focus-within, a:focus-visible, select:focus-visible { outline: 2px solid #0B2F5B; outline-offset: 2px; }
+
+      /* layar HP: panel penuh layar, tabel jadi kartu, sasaran sentuh lebih besar */
       @media (max-width: 640px) {
-        .fab { right: 12px; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); justify-content: center; padding: 14px 18px; font-size: 15px; }
-        .panel { inset: 0; right: 0; bottom: 0; width: 100%; max-height: none; height: 100%; border-radius: 0; font-size: 14px; }
-        .head { padding: calc(12px + env(safe-area-inset-top)) 14px 12px; }
-        .x { font-size: 30px; padding: 0 6px; }
-        .body { padding: 12px; gap: 12px; -webkit-overflow-scrolling: touch; }
-        .step { padding: 12px; }
-        label.file { width: 100%; justify-content: center; padding: 12px; font-size: 14px; }
-        select { width: 100%; font-size: 16px; padding: 8px; }
-        .dosen label { padding: 6px 0; }
+        .fab { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); justify-content: center; height: 50px; font-size: 15px; }
+        .panel { inset: 0; width: 100%; max-height: none; height: 100%; border-radius: 0; border: 0; font-size: 14.5px; }
+        .head { padding: calc(10px + env(safe-area-inset-top)) 12px 10px; }
+        .x { width: 40px; height: 40px; }
+        .body { padding: 0 14px 8px; -webkit-overflow-scrolling: touch; }
+        label.file { width: 100%; justify-content: center; height: 46px; font-size: 15px; }
+        select { width: 100%; height: 42px; font-size: 16px; }
+        .dosen label { padding: 8px 0; }
         .dosen input { width: 20px; height: 20px; }
         .tablewrap { max-height: none; border: 0; overflow: visible; }
         table, tbody, tr, td { display: block; width: 100%; }
         thead { display: none; }
-        tr { border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
+        tr { border: 1px solid #E1E7EF; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
         td { border: 0; padding: 3px 0; max-width: none !important; }
-        td:first-child { font-size: 11px; color: #6b7280; }
+        td:first-child { font-size: 11.5px; color: #55627A; }
         td:first-child::before { content: "Baris "; }
-        td.bukti { padding-top: 6px; }
-        button.mini, a.mini { padding: 7px 12px; font-size: 13px; margin: 6px 6px 0 0; }
+        button.mini, a.mini { padding: 8px 12px; font-size: 13.5px; }
         .foot { padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); }
-        .foot button.btn { flex: 1; padding: 13px 12px; font-size: 15px; }
+        .foot button.btn { flex: 1; justify-content: center; height: 48px; font-size: 15px; }
+        .foot .chip { flex-basis: 100%; }
         .progress { flex-basis: 100%; }
         .galeri { padding: 0; }
         .gbox { width: 100%; height: 100%; border-radius: 0; }
@@ -597,11 +675,12 @@
         .gthumb { height: 130px; }
       }
     </style>
-    <button class="fab" id="fab">⚡ AutoKonvert Logbook</button>
-    <div class="panel" id="panel">
+    <button class="fab" id="fab" aria-label="Buka AutoKonvert">${ic("zap")}AutoKonvert</button>
+    <div class="panel" id="panel" role="dialog" aria-label="AutoKonvert Logbook">
       <div class="head">
-        <div><h2>⚡ AutoKonvert Logbook <small style="display:inline;opacity:.7">v${esc(HOST.versi)}${HOST.jenis === "userscript" ? " · HP" : ""}</small></h2><small id="aktivitas"></small></div>
-        <button class="x" id="close" title="Tutup">×</button>
+        <span class="mark">${ic("zap")}</span>
+        <div class="judul"><h2>AutoKonvert Logbook<small>v${esc(HOST.versi)}${HOST.jenis === "userscript" ? " · HP" : ""}</small></h2><span class="sub" id="aktivitas"></span></div>
+        <button class="x" id="close" title="Tutup" aria-label="Tutup">${ic("x")}</button>
       </div>
       <div class="body" id="body"></div>
       <div class="foot" id="foot"></div>
@@ -622,6 +701,16 @@
   let fatalMsg = "";
   let excelMsg = "";
 
+  const LABEL_STATUS = {
+    siap: "Siap",
+    error: "Perlu diperbaiki",
+    duplikat: "Sudah ada",
+    memuat: "Membuka Drive",
+    mengirim: "Mengirim",
+    berhasil: "Terkirim",
+    gagal: "Gagal",
+  };
+
   function hitung() {
     const c = { siap: 0, error: 0, duplikat: 0, berhasil: 0, gagal: 0, mengirim: 0 };
     state.rows.forEach((r) => (c[r.status] = (c[r.status] || 0) + 1));
@@ -641,21 +730,21 @@
   function selBukti(r) {
     const d = r.data;
     let isi;
-    if (d?.file) isi = `📷 ${esc(d.file.name)}<div class="muted">dari ${LOKAL_KECIL}</div>`;
-    else if (d?.drive) isi = `☁️ ${esc(d.drive.name)}<div class="muted">dari Google Drive</div>`;
-    else if (r.status === "memuat") isi = `☁️ <span class="muted">membuka folder…</span>`;
+    if (d?.file) isi = `<div class="src">${ic("image")}<div>${esc(d.file.name)}<div class="muted">dari ${LOKAL_KECIL}</div></div></div>`;
+    else if (d?.drive) isi = `<div class="src">${ic("cloud")}<div>${esc(d.drive.name)}<div class="muted">dari Google Drive</div></div></div>`;
+    else if (r.status === "memuat") isi = `<div class="src muted">${ic("loader", "spin")}membuka folder…</div>`;
     else if (r.raw.bukti) isi = `<span class="muted">${esc(r.raw.bukti)}</span>`;
     else isi = '<span class="muted">—</span>';
     if (state.running || r.status === "berhasil" || r.status === "duplikat") return isi;
     const fid = folderBaris(r);
     const st = fid && state.drive.get(fid)?.status;
-    const galeri = st === "ok" ? `<button class="mini" data-galeri="${r.baris}">Galeri</button> ` : "";
+    const galeri = st === "ok" ? `<button class="mini" data-galeri="${r.baris}">${ic("grid")}Galeri</button>` : "";
     // link hanya ditampilkan kalau memang link Google Drive yang valid
     const buka =
       st === "gagal" && !d?.file
-        ? `<a class="mini" href="${esc(r.raw.buktiLink)}" target="_blank" rel="noopener noreferrer">Buka folder ↗</a> `
+        ? `<a class="mini" href="${esc(r.raw.buktiLink)}" target="_blank" rel="noopener noreferrer">${ic("external")}Buka folder</a>`
         : "";
-    return `${isi}<div>${galeri}${buka}<button class="mini" data-pilih-foto="${r.baris}">${LOKAL}</button></div>`;
+    return `${isi}<div>${galeri}${buka}<button class="mini" data-pilih-foto="${r.baris}">${ic("upload")}${LOKAL}</button></div>`;
   }
 
   // ---- galeri foto dari folder Drive (pilih foto untuk satu baris)
@@ -670,11 +759,11 @@
     g.innerHTML = `
       <div class="gbox">
         <div class="ghead"><div><b>Pilih foto bukti</b><div class="muted">Baris ${baris} · ${esc(row.raw.bukti)} · ${media.length} file</div></div>
-          <button class="x dark" id="gtutup" title="Tutup">×</button></div>
+          <button class="x" id="gtutup" title="Tutup" aria-label="Tutup">${ic("x")}</button></div>
         <div class="ggrid">${media
           .map(
             (f) => `<button class="gitem ${f.id === dipilih ? "aktif" : ""}" data-id="${esc(f.id)}">
-              <div class="gthumb" data-thumb="${esc(f.id)}">${f.jenis === "pdf" ? "📄 PDF" : "⏳"}</div>
+              <div class="gthumb" data-thumb="${esc(f.id)}">${f.jenis === "pdf" ? ic("file") : ic("loader", "spin")}</div>
               <div class="gname">${esc(f.name)}</div></button>`
           )
           .join("")}</div>
@@ -699,7 +788,7 @@
       if (f.jenis !== "gambar" || !g.classList.contains("open")) continue;
       const url = await thumbDrive(f.id).catch(() => null);
       const el = g.querySelector(`[data-thumb="${CSS.escape(f.id)}"]`);
-      if (el) el.innerHTML = url ? `<img src="${url}" alt="">` : "🖼️";
+      if (el) el.innerHTML = url ? `<img src="${url}" alt="">` : ic("image");
     }
   }
 
@@ -717,23 +806,23 @@
     const tanpa = aktif.filter((r) => !r.raw.bukti && !r.data?.file && !r.data?.drive).length;
 
     const ringkas = [
-      dariDrive && `☁️ ${dariDrive} dari Google Drive`,
-      dariKomputer && `📷 ${dariKomputer} dari ${LOKAL_KECIL}`,
+      dariDrive && `${ic("cloud")} ${dariDrive} dari Google Drive`,
+      dariKomputer && `${ic("image")} ${dariKomputer} dari ${LOKAL_KECIL}`,
       memuat && `⏳ ${memuat} sedang dibuka`,
       tanpa && `${tanpa} tanpa bukti`,
     ]
       .filter(Boolean)
       .join(" · ");
-    const tombolFoto = `<label class="file">📷 Pilih foto dari perangkat<input type="file" id="foto" multiple accept="${ACCEPT_BUKTI}" ${state.running ? "disabled" : ""}></label>`;
+    const tombolFoto = `<label class="file">${ic("upload")}Pilih foto dari perangkat<input type="file" id="foto" multiple accept="${ACCEPT_BUKTI}" ${state.running ? "disabled" : ""}></label>`;
     const ulang = driveGagal
-      ? `<div class="alert info" style="margin-top:8px">${driveGagal} folder Google Drive tidak bisa dibuka karena aksesnya dibatasi.
+      ? `<div class="alert info" style="margin-top:10px">${ic("info")}<span>${driveGagal} folder Google Drive tidak bisa dibuka karena aksesnya dibatasi.
           Login ke Google di browser ini dengan akun yang punya akses, lalu
-          <button class="mini" id="ulangDrive" ${state.running ? "disabled" : ""}>Coba buka ulang</button></div>`
+          <button class="mini" id="ulangDrive" ${state.running ? "disabled" : ""}>${ic("refresh")}Coba buka ulang</button></span></div>`
       : "";
 
     if (!kurang.length) {
       return `<div class="step">
-        <h3><span class="num">2</span> Foto bukti ${memuat ? "" : "✅"}</h3>
+        <h3>${memuat ? '<span class="num">2</span>' : `<span class="num ok">${ic("check")}</span>`} Foto bukti</h3>
         <div class="muted">${ringkas || "Tidak ada kolom bukti di Excel."}</div>
         ${ulang}
       </div>`;
@@ -777,12 +866,12 @@
           )
           .join("")}
           <div class="muted" style="margin-top:6px">Log hanya bisa ditambah pada aktivitas berstatus <b>Draft</b>.</div></div>`
-      : `<div class="step"><h3>Cara mulai</h3><ol style="margin:0;padding-left:18px">
+      : `<div class="step"><h3>Cara mulai</h3><ol class="mulai">
            <li>Buka <b>Kemahasiswaan → Aktivitas</b>.</li>
            <li>Ketuk tombol <b>Log</b> (ikon daftar) pada aktivitas berstatus <b>Draft</b>.</li>
-           <li>Ketuk lagi tombol <b>⚡ AutoKonvert</b> di halaman Log itu.</li></ol>
-           <a class="logitem" href="${PORTAL_ORIGIN}/Kegiatan/AktivitasKampusMerdeka" style="margin-top:10px"><b>Buka daftar Aktivitas →</b></a></div>`;
-    return `<div class="alert info">AutoKonvert aktif ✅ (v${esc(HOST.versi)}). Pengisian logbook dilakukan di halaman <b>Log</b> sebuah aktivitas.</div>${daftar}`;
+           <li>Tekan lagi tombol <b>AutoKonvert</b> di halaman Log itu.</li></ol>
+           <a class="logitem" href="${PORTAL_ORIGIN}/Kegiatan/AktivitasKampusMerdeka" style="margin-top:10px"><b>Buka daftar Aktivitas</b>${ic("arrow")}</a></div>`;
+    return `<div style="height:14px"></div><div class="alert ok">${ic("check")}<span>AutoKonvert aktif (v${esc(HOST.versi)}). Pengisian logbook dilakukan di halaman <b>Log</b> sebuah aktivitas.</span></div>${daftar}`;
   }
 
   function render() {
@@ -799,7 +888,7 @@
     }
 
     if (fatalMsg) {
-      body.innerHTML = `<div class="alert">${esc(fatalMsg)}</div>`;
+      body.innerHTML = `<div style="height:14px"></div><div class="alert">${ic("alert")}<span>${esc(fatalMsg)}</span></div>`;
       foot.innerHTML = "";
       return;
     }
@@ -822,8 +911,8 @@
       .map((r) => {
         const d = r.data;
         const catatan = [
-          ...(r.errors || []).map((e) => `<div class="err">✖ ${esc(e)}</div>`),
-          ...(r.warnings || []).map((w) => `<div class="warn">⚠ ${esc(w)}</div>`),
+          ...(r.errors || []).map((e) => `<div class="err">${ic("xcircle")}<span>${esc(e)}</span></div>`),
+          ...(r.warnings || []).map((w) => `<div class="warn">${ic("alert")}<span>${esc(w)}</span></div>`),
           r.pesan ? `<div class="${r.status === "gagal" ? "err" : "muted"}">${esc(r.pesan)}</div>` : "",
         ].join("");
         return `<tr>
@@ -831,7 +920,7 @@
           <td>${esc(tampilTanggal(r))}<br><span class="muted">${esc(tampilJam(r.raw.mulai))}–${esc(tampilJam(r.raw.selesai))}</span></td>
           <td class="ket">${esc(r.raw.keterangan)}<div class="muted">${esc(tampilTempat(r))}</div></td>
           <td class="bukti">${selBukti(r)}</td>
-          <td><span class="chip c-${r.status}">${esc(r.status)}</span>${catatan}</td>
+          <td><span class="chip c-${r.status}">${LABEL_STATUS[r.status] || esc(r.status)}</span>${catatan}</td>
         </tr>`;
       })
       .join("");
@@ -840,25 +929,25 @@
       <div class="step">
         <h3><span class="num">1</span> Pilih file Excel logbook</h3>
         <div class="row">
-          <label class="file">📄 Pilih Excel<input type="file" id="excel" accept="${ACCEPT_EXCEL}" ${state.running ? "disabled" : ""}></label>
+          <label class="file">${ic("sheet")}Pilih Excel<input type="file" id="excel" accept="${ACCEPT_EXCEL}" ${state.running ? "disabled" : ""}></label>
           <span class="muted">${state.excelName ? esc(state.excelName) + ` · ${state.rows.length} baris` : "Gunakan template dari website AutoKonvert"}</span>
         </div>
         ${
           state.sheets.length > 1
-            ? `<div class="row" style="margin-top:8px"><span>Sheet:</span>
+            ? `<div class="row" style="margin-top:10px"><span class="muted">Sheet</span>
                 <select id="sheet" ${state.running ? "disabled" : ""}>${state.sheets
                   .map((s) => `<option value="${esc(s)}" ${s === state.sheet ? "selected" : ""}>${esc(s)}</option>`)
                   .join("")}</select>
                 </div>
-               <div class="${state.sheetOtomatis ? "alert ok" : "alert info"}" style="margin-top:8px">${
+               <div class="${state.sheetOtomatis ? "alert ok" : "alert info"}" style="margin-top:10px">${ic(state.sheetOtomatis ? "check" : "info")}<span>${
                  state.sheetOtomatis
                    ? `Sheet <b>${esc(state.sheet)}</b> dipilih otomatis karena cocok dengan nama aktivitas ini.`
                    : `File ini punya ${state.sheets.length} sheet. Pastikan sheet <b>${esc(state.sheet)}</b> memang untuk aktivitas <b>${esc(getInfoAktivitas().nama)}</b>. Sheet lain dikirim dari halaman Log aktivitasnya sendiri.`
-               }</div>`
+               }</span></div>`
             : ""
         }
         <input type="file" id="fotoBaris" accept="${ACCEPT_BUKTI}" style="display:none">
-        ${excelMsg ? `<div class="alert" style="margin-top:8px">${esc(excelMsg)}</div>` : ""}
+        ${excelMsg ? `<div class="alert" style="margin-top:10px">${ic("xcircle")}<span>${esc(excelMsg)}</span></div>` : ""}
       </div>
       ${langkahFoto(driveGagal, jumlahFoto)}
       <div class="step dosen">
@@ -870,16 +959,14 @@
           ? `<div class="step">
         <h3><span class="num">4</span> Cek data sebelum dikirim</h3>
         <div class="muted" style="margin-bottom:8px">Foto di kolom Bukti bisa diganti per baris: <b>Galeri</b> (dari folder Drive) atau <b>${LOKAL}</b>.</div>
-        <div class="summary" style="margin-bottom:8px">
-          <span class="chip c-siap">Siap: ${c.siap}</span>
-          <span class="chip c-error">Perlu diperbaiki: ${c.error}</span>
-          <span class="chip c-duplikat">Sudah ada: ${c.duplikat}</span>
-          <span class="chip c-berhasil">Berhasil: ${c.berhasil}</span>
-          <span class="chip c-gagal">Gagal: ${c.gagal}</span>
-          ${c.memuat ? `<span class="chip c-memuat">Membuka Drive: ${c.memuat}</span>` : ""}
-          <span class="chip">Total durasi: ${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit</span>
+        <div class="summary">
+          ${["siap", "error", "duplikat", "memuat", "berhasil", "gagal"]
+            .filter((k) => c[k])
+            .map((k) => `<span class="chip c-${k}">${LABEL_STATUS[k]}: ${c[k]}</span>`)
+            .join("")}
+          <span>Total ${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit</span>
         </div>
-        ${c.error ? `<div class="alert" style="margin-bottom:8px">Ada ${c.error} baris yang perlu diperbaiki. Baris ini tidak akan dikirim sampai diperbaiki: pilih fotonya, atau perbaiki Excel lalu pilih ulang filenya.</div>` : ""}
+        ${c.error ? `<div class="alert" style="margin-bottom:10px">${ic("alert")}<span>Ada ${c.error} baris yang perlu diperbaiki. Baris ini tidak akan dikirim sampai diperbaiki: pilih fotonya, atau perbaiki Excel lalu pilih ulang filenya.</span></div>` : ""}
         <div class="tablewrap"><table>
           <thead><tr><th>Baris</th><th>Waktu</th><th>Keterangan</th><th>Bukti</th><th>Status</th></tr></thead>
           <tbody>${baris}</tbody>
@@ -894,11 +981,11 @@
     foot.innerHTML = state.running
       ? `<div class="progress"><div style="width:${total ? (selesai / total) * 100 : 0}%"></div></div>
          <span class="muted">${c.berhasil} berhasil · ${c.gagal} gagal</span>
-         <button class="btn danger" id="stop">Hentikan</button>`
+         <button class="btn danger" id="stop">${ic("x")}Hentikan</button>`
       : `${c.berhasil ? `<span class="chip c-berhasil">${c.berhasil} log terkirim</span>` : ""}
-         ${state.rows.length ? `<button class="btn secondary" id="laporan">Unduh laporan</button>` : ""}
-         ${c.berhasil ? `<button class="btn secondary" id="reload">Muat ulang halaman</button>` : ""}
-         <button class="btn primary" id="kirim" ${siapKirim ? "" : "disabled"}>${c.gagal && !c.siap ? "Kirim ulang yang gagal" : `Kirim ${siapKirim} log`}</button>`;
+         ${state.rows.length ? `<button class="btn secondary" id="laporan">${ic("report")}Laporan</button>` : ""}
+         ${c.berhasil ? `<button class="btn secondary" id="reload">${ic("refresh")}Muat ulang</button>` : ""}
+         <button class="btn primary" id="kirim" ${siapKirim ? "" : "disabled"}>${ic("send")}${c.gagal && !c.siap ? "Kirim ulang yang gagal" : `Kirim ${siapKirim} log`}</button>`;
 
     // event
     root.getElementById("excel")?.addEventListener("change", onExcel);
