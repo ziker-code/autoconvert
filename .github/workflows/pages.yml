@@ -42,6 +42,23 @@ jobs:
 
       - run: npm test
 
+      # Website sudah pindah ke Vercel: halaman utama GitHub Pages dialihkan ke sana,
+      # file di /assets tetap ada untuk userscript lama yang mengecek pembaruan.
+      - name: Alihkan ke Vercel
+        run: |
+          cat > website/index.html <<'HTML'
+          <!doctype html>
+          <html lang="id"><head><meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>AutoKonvert pindah ke Vercel</title>
+          <link rel="canonical" href="https://autokonvert.vercel.app/">
+          <meta http-equiv="refresh" content="0; url=https://autokonvert.vercel.app/">
+          <script>location.replace("https://autokonvert.vercel.app/" + location.hash)</script>
+          </head><body style="font-family:system-ui,sans-serif;padding:24px">
+          AutoKonvert sudah pindah ke <a href="https://autokonvert.vercel.app/">autokonvert.vercel.app</a>.
+          </body></html>
+          HTML
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: website
